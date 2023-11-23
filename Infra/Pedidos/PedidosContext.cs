@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Base.Data;
 using Domain.Base.Communication.Mediator;
 using Domain.Base.Messages;
+using Domain.Catalogo;
 using System.Reflection;
 
 namespace Infra.Pedidos

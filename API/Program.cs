@@ -1,10 +1,12 @@
 using API.Data;
 using API.Setup;
 using Infra.Pedidos;
+using Infra.Catalogo;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Application.Pedidos.AutoMapper;
 using Swashbuckle.AspNetCore.Filters;
+using Application.Catalogo.AutoMapper;
 using Domain.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,9 @@ string secret = builder.Configuration.GetSection("ClientSecret").Value;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
 
+builder.Services.AddDbContext<CatalogoContext>(options =>
+        options.UseNpgsql(connectionString));
+
 builder.Services.AddDbContext<PedidosContext>(options =>
         options.UseNpgsql(connectionString));
 
@@ -32,6 +37,7 @@ builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenConfig();
 
+builder.Services.AddAutoMapper(typeof(ProdutosMappingProfile));
 builder.Services.AddAutoMapper(typeof(PedidosMappingProfile));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
@@ -57,9 +63,7 @@ app.MapControllers();
 
 await using var scope = app.Services.CreateAsyncScope();
 using var dbApplication = scope.ServiceProvider.GetService<ApplicationDbContext>();
-using var dbPedidos = scope.ServiceProvider.GetService<PedidosContext>();
 
 await dbApplication!.Database.MigrateAsync();
-await dbPedidos!.Database.MigrateAsync();
 
 app.Run();
