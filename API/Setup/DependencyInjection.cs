@@ -1,5 +1,8 @@
 ﻿using Application.Pedidos.Commands;
+using Domain.Catalogo;
 using Domain.Pedidos;
+using Infra.Catalogo;
+using Infra.Catalogo.Repository;
 using Infra.Pedidos.Repository;
 using Infra.Pedidos;
 using MediatR;
@@ -9,6 +12,10 @@ using Application.Pedidos.Queries;
 using Application.Pedidos.Handlers;
 using Application.Pedidos.Boundaries;
 using Application.Pedidos.UseCases;
+using Application.Catalogo.Queries;
+using Application.Catalogo.Commands;
+using Application.Catalogo.Boundaries;
+using Application.Catalogo.Handlers;
 
 namespace API.Setup
 {
@@ -21,6 +28,14 @@ namespace API.Setup
 
             //Domain Notifications 
             services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
+
+            // Catalogo
+            services.AddTransient<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<IProdutosQueries, ProdutosQueries>();
+            services.AddScoped<IRequestHandler<AdicionarProdutoCommand, ProdutoOutput>, AdicionarProdutoCommandHandler>();
+            services.AddScoped<IRequestHandler<AtualizarProdutoCommand, ProdutoOutput>, AtualizarProdutoCommandHandler>();
+            services.AddScoped<IRequestHandler<RemoverProdutoCommand, bool>, RemoverProdutoCommandHandler>();
+            services.AddScoped<CatalogoContext>();
 
             // Pedidos
             services.AddScoped<IPedidoRepository, PedidoRepository>();

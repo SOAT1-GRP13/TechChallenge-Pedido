@@ -123,8 +123,6 @@ namespace Application.Pedidos.UseCases
             // pedido.PedidoItems.ToList().ForEach(i => itensList.Add(new Item { Id = i.ProdutoId, Quantidade = i.Quantidade }));
             // var listaProdutosPedido = new ListaProdutosPedido { PedidoId = pedido.Id, Itens = itensList };
 
-            //TODO Tem que chamar o microserviço do MercadoPago para gerar o QRCode
-            //var qrData = await _mercadoPagoRepository.GeraPedidoQrCode(pedido);
             var qrData = string.Empty;
 
             if (string.IsNullOrEmpty(qrData))
