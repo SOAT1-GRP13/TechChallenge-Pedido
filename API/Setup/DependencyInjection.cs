@@ -16,6 +16,9 @@ using Application.Catalogo.Queries;
 using Application.Catalogo.Commands;
 using Application.Catalogo.Boundaries;
 using Application.Catalogo.Handlers;
+using Polly.Extensions.Http;
+using System.Net;
+using Polly;
 
 namespace API.Setup
 {
@@ -30,6 +33,15 @@ namespace API.Setup
             services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
 
             // Catalogo
+            services.AddHttpClient<IProdutoRepository, ProdutoRepository>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .AddPolicyHandler(
+                    HttpPolicyExtensions
+                        .HandleTransientHttpError()
+                        .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+                        .WaitAndRetryAsync(2, retryAttempts => TimeSpan.FromSeconds(Math.Pow(2, retryAttempts)))
+            );
+
             services.AddTransient<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IProdutosQueries, ProdutosQueries>();
             services.AddScoped<IRequestHandler<AdicionarProdutoCommand, ProdutoOutput>, AdicionarProdutoCommandHandler>();
