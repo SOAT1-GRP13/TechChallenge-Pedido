@@ -47,6 +47,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+app.UsePathBase(new PathString("/pedido"));
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
