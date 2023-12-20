@@ -2,6 +2,8 @@ using Domain.Base.Data;
 using Domain.Catalogo;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace Infra.Catalogo.Repository
 {
@@ -10,12 +12,14 @@ namespace Infra.Catalogo.Repository
         private readonly CatalogoContext _context;
         private readonly DbContextOptions<CatalogoContext> _optionsBuilder;
         protected readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public ProdutoRepository(CatalogoContext context, IConfiguration configuration)
+        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, HttpClient httpClient)
         {
             _optionsBuilder = new DbContextOptions<CatalogoContext>();
             _context = context;
             _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         public IUnitOfWork UnitOfWork => _context;
@@ -28,8 +32,19 @@ namespace Infra.Catalogo.Repository
 
         public async Task<Produto> ObterPorId(Guid id)
         {
-            using var context = new CatalogoContext(_optionsBuilder, _configuration);
-            return await context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            var catalogoApiUrl = _configuration.GetSection("CatalogoApiUrl").Value;
+
+            var response = await _httpClient.GetAsync($"{catalogoApiUrl}/Catalogo/busca_produto/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var produto = JsonConvert.DeserializeObject<Produto>(await response.Content.ReadAsStringAsync());
+                return produto;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Produto>> ObterPorCategoria(int codigo)
