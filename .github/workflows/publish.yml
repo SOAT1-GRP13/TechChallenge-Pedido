@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.get-version.outputs.version }}
 
     steps:
     - name: Checkout code
@@ -44,21 +46,16 @@ jobs:
         aws-region: us-west-2
         aws-access-key-id: ${{ secrets.ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.SECRET_KEY }}
-    
-    - name: Get version from URL
-      id: get-version
-      run: echo "::set-output name=version::$(curl -s https://devcm.com.br/versao/?projeto=TechChallenge-Pedido)"
-
-    - name: Set up version
-      run: echo "VERSION=${{ steps.get-version.outputs.version }}" >> $GITHUB_ENV
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
+      env:
+        VERSION: ${{needs.build-and-push.outputs.VERSION}}
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: deploy/task-definition.json
         container-name: pedido-api
-        image: christiandmelo/tech-challenge-soat1-grp13-pedido:${{ env.VERSION }}
+        image: christiandmelo/tech-challenge-soat1-grp13-pedido:$VERSION
     
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
