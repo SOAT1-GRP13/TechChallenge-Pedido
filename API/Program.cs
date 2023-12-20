@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Configuration.AddAmazonSecretsManager("us-west-2", "soat1-grp13");
+builder.Configuration.AddAmazonSecretsManager("us-west-2", "pedido-secret");
 builder.Services.Configure<Secrets>(builder.Configuration);
 
 var connectionString = builder.Configuration.GetSection("ConnectionString").Value;

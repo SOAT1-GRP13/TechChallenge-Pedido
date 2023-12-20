@@ -12,6 +12,7 @@ namespace Domain.Configuration
             PreSalt = string.Empty;
             PosSalt = string.Empty;
             ConnectionString = string.Empty;
+            CatalogoApiUrl = string.Empty;
         }
 
         public string MercadoPagoUserId { get; set; }
@@ -22,5 +23,6 @@ namespace Domain.Configuration
         public string PreSalt { get; set; }
         public string PosSalt { get; set; }
         public string ConnectionString { get; set; }
+        public string CatalogoApiUrl { get; set; }
     }
 }
