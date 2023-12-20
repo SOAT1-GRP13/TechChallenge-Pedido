@@ -55,7 +55,7 @@ jobs:
       with:
         task-definition: deploy/task-definition.json
         container-name: pedido-api
-        image: christiandmelo/tech-challenge-soat1-grp13-pedido:$VERSION
+        image: christiandmelo/tech-challenge-soat1-grp13-pedido:${{env.VERSION}}
     
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
