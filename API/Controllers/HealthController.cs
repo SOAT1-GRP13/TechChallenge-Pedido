@@ -7,7 +7,7 @@ using Domain.Base.Messages.CommonMessages.Notifications;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("Health")]
+    [Route("[controller]")]
     [SwaggerTag("Endpoints relacionados a pedidos, sendo necessário se autenticar")]
     public class HealthController : ControllerBase
     {

@@ -13,7 +13,7 @@ using Domain.Base.Messages.CommonMessages.Notifications;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("Carrinho")]
+    [Route("[controller]")]
     [SwaggerTag("Endpoints relacionados ao carrinho, sendo necessário se autenticar e o clienteId é pego de forma automatica")]
     public class CarrinhoController : ControllerBase
     {
