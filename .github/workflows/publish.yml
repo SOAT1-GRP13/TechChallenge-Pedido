@@ -44,6 +44,13 @@ jobs:
         aws-region: us-west-2
         aws-access-key-id: ${{ secrets.ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+    
+    - name: Get version from URL
+      id: get-version
+      run: echo "::set-output name=version::$(curl -s https://devcm.com.br/versao/?projeto=TechChallenge-Pedido)"
+
+    - name: Set up version
+      run: echo "VERSION=${{ steps.get-version.outputs.version }}" >> $GITHUB_ENV
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
