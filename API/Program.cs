@@ -48,6 +48,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UsePathBase(new PathString("/pedido"));
+app.UseRouting();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -64,7 +65,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 await using var scope = app.Services.CreateAsyncScope();
-using var dbApplication = scope.ServiceProvider.GetService<ApplicationDbContext>();
+using var dbApplication = scope.ServiceProvider.GetService<PedidosContext>();
 
 await dbApplication!.Database.MigrateAsync();
 
