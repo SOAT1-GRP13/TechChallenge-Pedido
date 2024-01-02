@@ -2,6 +2,7 @@ using Domain.Base.Data;
 using Domain.Catalogo;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Http;
 
@@ -13,13 +14,15 @@ namespace Infra.Catalogo.Repository
         private readonly DbContextOptions<CatalogoContext> _optionsBuilder;
         protected readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly ILogger _logger;
 
-        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, HttpClient httpClient)
+        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, HttpClient httpClient, ILogger<ProdutoRepository> logger)
         {
             _optionsBuilder = new DbContextOptions<CatalogoContext>();
             _context = context;
             _configuration = configuration;
             _httpClient = httpClient;
+            _logger = logger;
         }
 
         public IUnitOfWork UnitOfWork => _context;
@@ -43,6 +46,7 @@ namespace Infra.Catalogo.Repository
             }
             else
             {
+                _logger.LogError(await response.Content.ReadAsStringAsync());
                 return null;
             }
         }

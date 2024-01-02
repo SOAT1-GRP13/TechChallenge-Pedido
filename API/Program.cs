@@ -14,12 +14,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Configuration.AddAmazonSecretsManager("us-west-2", "pedido-secret");
-builder.Services.Configure<Secrets>(builder.Configuration);
+string connectionString = "";
+string secret = "";
 
-var connectionString = builder.Configuration.GetSection("ConnectionString").Value;
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAmazonSecretsManager("us-west-2", "auth-secret");
+    builder.Services.Configure<Secrets>(builder.Configuration);
 
-string secret = builder.Configuration.GetSection("ClientSecret").Value;
+    connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
+
+    secret = builder.Configuration.GetSection("ClientSecret").Value ?? string.Empty;
+}
+else
+{
+    //local
+    connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
+
+    secret = builder.Configuration.GetSection("ClientSecret").Value ?? string.Empty;
+}
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
