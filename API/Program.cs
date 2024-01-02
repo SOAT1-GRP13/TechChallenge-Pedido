@@ -20,7 +20,6 @@ string secret = "";
 if (builder.Environment.IsProduction())
 {
     builder.Configuration.AddAmazonSecretsManager("us-west-2", "auth-secret");
-    builder.Services.Configure<Secrets>(builder.Configuration);
 
     connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
 
@@ -33,6 +32,8 @@ else
 
     secret = builder.Configuration.GetSection("ClientSecret").Value ?? string.Empty;
 }
+
+builder.Services.Configure<Secrets>(builder.Configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));

@@ -1,8 +1,10 @@
 using Domain.Base.Data;
 using Domain.Catalogo;
+using Domain.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http;
 
@@ -15,14 +17,17 @@ namespace Infra.Catalogo.Repository
         protected readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
+        private readonly Secrets _secrets;
 
-        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, HttpClient httpClient, ILogger<ProdutoRepository> logger)
+        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, 
+        HttpClient httpClient, ILogger<ProdutoRepository> logger, IOptions<Secrets> settings)
         {
             _optionsBuilder = new DbContextOptions<CatalogoContext>();
             _context = context;
             _configuration = configuration;
             _httpClient = httpClient;
             _logger = logger;
+            _secrets = settings.Value;
         }
 
         public IUnitOfWork UnitOfWork => _context;
@@ -35,7 +40,7 @@ namespace Infra.Catalogo.Repository
 
         public async Task<Produto> ObterPorId(Guid id)
         {
-            var catalogoApiUrl = _configuration.GetSection("CatalogoApiUrl").Value;
+            var catalogoApiUrl = _secrets.CatalogoApiUrl;
             _logger.LogInformation(catalogoApiUrl);
             var response = await _httpClient.GetAsync($"{catalogoApiUrl}/produto/Catalogo/busca_produto/{id}");
 
