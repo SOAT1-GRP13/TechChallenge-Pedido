@@ -36,7 +36,7 @@ namespace Infra.Catalogo.Repository
         public async Task<Produto> ObterPorId(Guid id)
         {
             var catalogoApiUrl = _configuration.GetSection("CatalogoApiUrl").Value;
-
+            _logger.LogInformation(catalogoApiUrl);
             var response = await _httpClient.GetAsync($"{catalogoApiUrl}/produto/Catalogo/busca_produto/{id}");
 
             if (response.IsSuccessStatusCode)
