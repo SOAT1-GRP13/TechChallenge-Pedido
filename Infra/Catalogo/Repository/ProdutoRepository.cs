@@ -37,7 +37,7 @@ namespace Infra.Catalogo.Repository
         {
             var catalogoApiUrl = _configuration.GetSection("CatalogoApiUrl").Value;
 
-            var response = await _httpClient.GetAsync($"{catalogoApiUrl}/Catalogo/busca_produto/{id}");
+            var response = await _httpClient.GetAsync($"{catalogoApiUrl}/produto/Catalogo/busca_produto/{id}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -46,7 +46,7 @@ namespace Infra.Catalogo.Repository
             }
             else
             {
-                _logger.LogError(await response.Content.ReadAsStringAsync());
+                _logger.LogInformation(await response.Content.ReadAsStringAsync());
                 return null;
             }
         }
