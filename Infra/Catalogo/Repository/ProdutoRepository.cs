@@ -28,7 +28,7 @@ namespace Infra.Catalogo.Repository
             _httpClient = httpClient;
             _logger = logger;
             _secrets = settings.Value;
-            _httpClient.BaseAddress = new Uri("http://internal-techchallengeasoat1grp13alb-1917606409.us-west-2.elb.amazonaws.com/produto");
+            _httpClient.BaseAddress = new Uri("http://internal-techchallengeasoat1grp13alb-1917606409.us-west-2.elb.amazonaws.com");
         }
 
         public IUnitOfWork UnitOfWork => _context;
@@ -43,7 +43,7 @@ namespace Infra.Catalogo.Repository
         {
             // var catalogoApiUrl = _secrets.CatalogoApiUrl;
             // _logger.LogInformation(catalogoApiUrl);
-            var response = await _httpClient.GetAsync($"/Catalogo/busca_produto/{id}");
+            var response = await _httpClient.GetAsync($"/produto/Catalogo/busca_produto/{id}");
 
             if (response.IsSuccessStatusCode)
             {
