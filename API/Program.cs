@@ -19,7 +19,7 @@ string secret = "";
 
 if (builder.Environment.IsProduction())
 {
-    builder.Configuration.AddAmazonSecretsManager("us-west-2", "auth-secret");
+    builder.Configuration.AddAmazonSecretsManager("us-west-2", "pedido-secret");
 
     connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
 
