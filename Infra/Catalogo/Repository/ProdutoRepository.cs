@@ -28,7 +28,7 @@ namespace Infra.Catalogo.Repository
             _httpClient = httpClient;
             _logger = logger;
             _secrets = settings.Value;
-            _httpClient.BaseAddress = new Uri(_secrets.CatalogoApiUrl);
+            _httpClient.BaseAddress = new Uri("http://internal-techchallengeasoat1grp13alb-1917606409.us-west-2.elb.amazonaws.com/produto");
         }
 
         public IUnitOfWork UnitOfWork => _context;
