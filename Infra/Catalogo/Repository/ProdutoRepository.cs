@@ -1,7 +1,10 @@
 using Domain.Base.Data;
 using Domain.Catalogo;
+using Domain.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http;
 
@@ -13,13 +16,19 @@ namespace Infra.Catalogo.Repository
         private readonly DbContextOptions<CatalogoContext> _optionsBuilder;
         protected readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly ILogger _logger;
+        private readonly Secrets _secrets;
 
-        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, HttpClient httpClient)
+        public ProdutoRepository(CatalogoContext context, IConfiguration configuration, 
+        HttpClient httpClient, ILogger<ProdutoRepository> logger, IOptions<Secrets> settings)
         {
             _optionsBuilder = new DbContextOptions<CatalogoContext>();
             _context = context;
             _configuration = configuration;
             _httpClient = httpClient;
+            _logger = logger;
+            _secrets = settings.Value;
+            _httpClient.BaseAddress = new Uri(_secrets.CatalogoApiUrl);
         }
 
         public IUnitOfWork UnitOfWork => _context;
@@ -32,9 +41,9 @@ namespace Infra.Catalogo.Repository
 
         public async Task<Produto> ObterPorId(Guid id)
         {
-            var catalogoApiUrl = _configuration.GetSection("CatalogoApiUrl").Value;
-
-            var response = await _httpClient.GetAsync($"{catalogoApiUrl}/Catalogo/busca_produto/{id}");
+            // var catalogoApiUrl = _secrets.CatalogoApiUrl;
+            // _logger.LogInformation(catalogoApiUrl);
+            var response = await _httpClient.GetAsync($"/produto/Catalogo/busca_produto/{id}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -43,6 +52,7 @@ namespace Infra.Catalogo.Repository
             }
             else
             {
+                _logger.LogInformation(await response.Content.ReadAsStringAsync());
                 return null;
             }
         }
