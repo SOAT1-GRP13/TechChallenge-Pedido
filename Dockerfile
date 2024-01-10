@@ -7,17 +7,14 @@ COPY ./*.sln ./
 COPY ./API/*.csproj ./API/
 COPY ./Application/*.csproj ./Application/
 COPY ./Domain/*.csproj ./Domain/
-COPY ./Domain.Tests/*.csproj ./Domain.Tests/
-COPY ./Application.Tests/*.csproj ./Application.Tests/
 COPY ./Infra/*.csproj ./Infra/
+COPY ./Tests/API.Tests/*.csproj ./Tests/API.Tests/
+COPY ./Tests/Application.Tests/*.csproj ./Tests/Application.Tests/
+COPY ./Tests/Domain.Tests/*.csproj ./Tests/Domain.Tests/
+COPY ./Tests/Infra.Tests/*.csproj ./Tests/Infra.Tests/
 RUN dotnet restore
 
 # Copiando o código-fonte e compilando a aplicação
-#COPY ./API ./API/
-#COPY ./Application ./Application/
-#COPY ./Domain ./Domain/
-#COPY ./Domain.Tests ./Domain.Tests/
-#COPY ./Infra ./Infra/
 COPY . ./
 RUN dotnet publish -c Release -o out
 
