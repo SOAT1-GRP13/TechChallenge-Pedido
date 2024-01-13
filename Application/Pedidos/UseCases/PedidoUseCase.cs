@@ -3,6 +3,7 @@ using Domain.Pedidos;
 using Domain.Base.DomainObjects;
 using Application.Pedidos.Queries.DTO;
 using Application.Pedidos.Boundaries;
+using Domain.Pagamento;
 
 namespace Application.Pedidos.UseCases
 {
@@ -10,16 +11,19 @@ namespace Application.Pedidos.UseCases
     {
         #region Propriedades
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IMapper _mapper;
         #endregion
 
         #region Construtor
         public PedidoUseCase(
             IPedidoRepository pedidoRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IPagamentoRepository pagamentoRepository)
         {
             _pedidoRepository = pedidoRepository;
             _mapper = mapper;
+            _pagamentoRepository = pagamentoRepository;
         }
         #endregion
 
@@ -116,14 +120,9 @@ namespace Application.Pedidos.UseCases
         public async Task<ConfirmarPedidoOutput> IniciarPedido(Guid pedidoId)
         {
             var pedido = await _pedidoRepository.ObterPorId(pedidoId) ?? throw new DomainException("Pedido não encontrado!");
-            //TODO integrar com Mercado pago e adicionar um Id referente ao pagamento
 
 
-            // var itensList = new List<Item>();
-            // pedido.PedidoItems.ToList().ForEach(i => itensList.Add(new Item { Id = i.ProdutoId, Quantidade = i.Quantidade }));
-            // var listaProdutosPedido = new ListaProdutosPedido { PedidoId = pedido.Id, Itens = itensList };
-
-            var qrData = string.Empty;
+            var qrData = await _pagamentoRepository.GeraPedidoQrCode(pedido);
 
             if (string.IsNullOrEmpty(qrData))
             {
@@ -131,10 +130,6 @@ namespace Application.Pedidos.UseCases
             }
 
             pedido.IniciarPedido();
-
-            // var itensList = new List<Item>();
-            // pedido.PedidoItems.ToList().ForEach(i => itensList.Add(new Item { Id = i.ProdutoId, Quantidade = i.Quantidade }));
-            // var listaProdutosPedido = new ListaProdutosPedido { PedidoId = pedido.Id, Itens = itensList };
 
             _pedidoRepository.Atualizar(pedido);
             await _pedidoRepository.UnitOfWork.Commit();

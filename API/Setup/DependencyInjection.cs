@@ -19,6 +19,8 @@ using Application.Catalogo.Handlers;
 using Polly.Extensions.Http;
 using System.Net;
 using Polly;
+using Domain.Pagamento;
+using Infra.Pagamento.Repository;
 
 namespace API.Setup
 {
@@ -54,6 +56,9 @@ namespace API.Setup
             services.AddScoped<IPedidoQueries, PedidoQueries>();
             services.AddScoped<IPedidoUseCase, PedidoUseCase>();
             services.AddScoped<PedidosContext>();
+
+            //Pagamento
+            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 
             services.AddScoped<IRequestHandler<AtualizarStatusPedidoCommand, PedidoOutput>, AtualizarStatusPedidoCommandHandler>();
             services.AddScoped<IRequestHandler<AdicionarItemPedidoCommand, bool>, AdicionarItemPedidoCommandHandler>();
