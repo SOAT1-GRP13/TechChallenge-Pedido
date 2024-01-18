@@ -1,5 +1,4 @@
 ﻿using API.Controllers;
-using Application.Catalogo.Commands.Validation;
 using Application.Catalogo.Dto;
 using Application.Catalogo.Queries;
 using Application.Pedidos.Boundaries;
@@ -13,12 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Tests.Controllers
 {
