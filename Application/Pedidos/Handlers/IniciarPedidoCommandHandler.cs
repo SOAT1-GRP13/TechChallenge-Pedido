@@ -28,6 +28,8 @@ namespace Application.Pedidos.Handlers
             {
                 foreach (var error in message.ValidationResult.Errors)
                     await _mediatorHandler.PublicarNotificacao(new DomainNotification(message.MessageType, error.ErrorMessage));
+
+                return new ConfirmarPedidoOutput();
             }
 
             try

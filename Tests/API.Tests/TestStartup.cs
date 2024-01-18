@@ -4,6 +4,8 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Pedidos.AutoMapper;
+using Infra.Pedidos;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Tests
 {
@@ -18,6 +20,11 @@ namespace API.Tests
             var configuration = new ConfigurationBuilder()
                     .AddJsonStream(new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
                     .Build();
+
+            services.AddSingleton<IConfiguration>(configuration);
+
+            services.AddDbContext<PedidosContext>(options =>
+                options.UseNpgsql("User ID=fiap;Password=S3nh@L0c@lP3d1d0;Host=localhost;Port=15433;Database=techChallengeProduto;Pooling=true;"));
 
             services.AddSingleton<IConfiguration>(configuration);
 
