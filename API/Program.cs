@@ -35,11 +35,8 @@ else
 
 builder.Services.Configure<Secrets>(builder.Configuration);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
-
-builder.Services.AddDbContext<CatalogoContext>(options =>
-        options.UseNpgsql(connectionString));
+// builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//         options.UseNpgsql(connectionString));
 
 builder.Services.AddDbContext<PedidosContext>(options =>
         options.UseNpgsql(connectionString));

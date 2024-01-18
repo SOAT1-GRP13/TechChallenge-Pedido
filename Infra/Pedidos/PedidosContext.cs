@@ -41,7 +41,7 @@ namespace Infra.Pedidos
             }
 
             var sucesso = await base.SaveChangesAsync() > 0;
-            if (sucesso) await _mediatorHandler.PublicarEventos(this); //Se houver sucesso, publica os eventos
+            //if (sucesso) await _mediatorHandler.PublicarEventos(this); //Se houver sucesso, publica os eventos
 
             return sucesso;
         }

@@ -1,7 +1,6 @@
 ﻿using Domain.Base.Data;
 using Domain.Configuration;
 using Domain.Pedidos;
-using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
