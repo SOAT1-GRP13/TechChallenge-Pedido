@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.Pedidos;
-using Application.Pedidos.Boundaries;
 using Application.Pedidos.Queries.DTO;
 
 namespace Application.Pedidos.AutoMapper
@@ -10,8 +9,6 @@ namespace Application.Pedidos.AutoMapper
         public PedidosMappingProfile()
         {
             CreateMap<Pedido, PedidoDto>();
-
-            CreateMap<PedidoDto, PedidoOutput>();
         }
     }
 }

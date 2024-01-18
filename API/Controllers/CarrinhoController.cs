@@ -54,13 +54,14 @@ namespace API.Controllers
                 await _mediatorHandler.EnviarComando<AdicionarItemPedidoCommand, bool>(command);
 
                 if (!OperacaoValida())
-                    return this.StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());
+                    return StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());
 
                 return Ok(await _pedidoQueries.ObterCarrinhoCliente(ObterClienteId()));
             }
             catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                return StatusCode(StatusCodes.Status500InternalServerError,
+
                                        $"Erro ao tentar adicionar item ao carrinho. Erro: {ex.Message}");
             }
 
@@ -87,13 +88,13 @@ namespace API.Controllers
                 await _mediatorHandler.EnviarComando<AtualizarItemPedidoCommand, bool>(command);
 
                 if (!OperacaoValida())
-                    return this.StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());
+                    return StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());
 
                 return Ok(await _pedidoQueries.ObterCarrinhoCliente(ObterClienteId()));
             }
             catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                return StatusCode(StatusCodes.Status500InternalServerError,
                                        $"Erro ao tentar atualizar item do carrinho. Erro: {ex.Message}");
             }
         }
@@ -128,9 +129,6 @@ namespace API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                                        $"Erro ao tentar remover item do carrinho. Erro: {ex.Message}");
             }
-
-
-
         }
 
         [HttpGet]
@@ -148,13 +146,13 @@ namespace API.Controllers
             {
                 var carrinho = await _pedidoQueries.ObterCarrinhoCliente(ObterClienteId());
                 if (carrinho is null)
-                    return this.StatusCode(StatusCodes.Status404NotFound, "Nenhum carrinho em rascunho encontrado");
+                    return StatusCode(StatusCodes.Status404NotFound, "Nenhum carrinho em rascunho encontrado");
 
                 return Ok(carrinho);
             }
             catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                return StatusCode(StatusCodes.Status500InternalServerError,
                                        $"Erro ao tentar recuperar carrinho. Erro: {ex.Message}");
             }
         }
