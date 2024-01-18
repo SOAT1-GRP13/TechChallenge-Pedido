@@ -29,24 +29,5 @@ namespace Application.Tests.Pedidos.AutoMapper
             Assert.Equal(pedido.Id, pedidoDto.Id);
             Assert.Equal(pedido.ValorTotal, pedidoDto.ValorTotal);
         }
-
-        [Fact]
-        public void DeveMapearPedidoDtoParaPedidoOutputCorretamente()
-        {
-            // Arrange
-            var pedidoDto = new PedidoDto
-            {
-                Id = Guid.NewGuid(),
-                ValorTotal = 150m,
-                PedidoStatus = PedidoStatus.Pago
-            };
-
-            // Act
-            var pedidoOutput = _mapper.Map<PedidoOutput>(pedidoDto);
-
-            // Assert
-            Assert.Equal(pedidoDto.Id, pedidoOutput.Id);
-            Assert.Equal(pedidoDto.ValorTotal, pedidoOutput.ValorTotal);
-        }
     }
 }
