@@ -8,16 +8,16 @@ using Moq;
 using Newtonsoft.Json;
 using System.Net;
 
-namespace Infra.Tests.Catalogo.Repository
+namespace Infra.Tests.Pagamento.Repository
 {
-    public class ProdutoRepositoryTests
+    public class PagamentoRepositoryTests
     {
         private readonly IConfiguration _mockConfiguration;
         private readonly ILogger<ProdutoRepository> _mockLogger;
         private readonly IOptions<Secrets> _mockOptions;
         private Secrets _secrets;
 
-        public ProdutoRepositoryTests()
+        public PagamentoRepositoryTests()
         {
             _mockConfiguration = Mock.Of<IConfiguration>();
             _mockLogger = Mock.Of<ILogger<ProdutoRepository>>();
@@ -29,7 +29,7 @@ namespace Infra.Tests.Catalogo.Repository
         public async Task ObterPorId_DeveRetornarProduto_QuandoApiRetornaSucesso()
         {
             // Arrange
-            var produto = new Produto("Produto 1", "Descrição do produto 1", true, 10, Guid.NewGuid(), DateTime.Now, "imagem.png");
+            var produto = new Produto("Teste", "Teste", true, 10, Guid.NewGuid(), DateTime.Now, "Teste");
             var fakeResponse = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
