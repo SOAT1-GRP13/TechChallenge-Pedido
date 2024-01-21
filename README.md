@@ -1,51 +1,51 @@
-<h1> # Tech Challenge - SOAT1 - Grupo 13 - Microserviço de pedido </h1>
+<h1>  Tech Challenge - SOAT1 - Grupo 13 - MicroserviÃ§o de pedido </h1>
 
 ![GitHub](https://img.shields.io/github/license/dropbox/dropbox-sdk-java)
 
 # Resumo do projeto
 
-Este projeto é desenvolvido em C# com .NET 6, seguindo os princípios da arquitetura hexagonal. Seu objetivo principal é permitir que os usuários possam adicionar um item ao carrinho, atualizar esse item, remover o item do carrinho, listar todos os itens do carrinho e confirmar o pedido.
+Este projeto Ã© desenvolvido em C# com .NET 6, seguindo os princÃ­pios da arquitetura hexagonal. Seu objetivo principal Ã© permitir que os usuÃ¡rios possam adicionar um item ao carrinho, atualizar esse item, remover o item do carrinho, listar todos os itens do carrinho e confirmar o pedido.
 
-Para garantir a segurança das informações de acesso ao banco de dados PostgreSQL, o projeto faz uso do Secret Manager. Isso permite que as credenciais do banco de dados sejam armazenadas de forma segura e acessadas apenas por autorizações apropriadas. Essa abordagem fortalece a segurança dos dados sensíveis.
+Para garantir a seguranÃ§a das informaÃ§Ãµes de acesso ao banco de dados PostgreSQL, o projeto faz uso do Secret Manager. Isso permite que as credenciais do banco de dados sejam armazenadas de forma segura e acessadas apenas por autorizaÃ§Ãµes apropriadas. Essa abordagem fortalece a seguranÃ§a dos dados sensÃ­veis.
 
-Ao longo do desenvolvimento, estaremos fazendo entregas incrementais e criando releases no GIT para acompanhar o progresso do projeto. Esperamos que este trabalho demonstre nosso conhecimento teórico e prático adquirido durante a pós-graduação, além de servir como um exemplo de aplicação das melhores práticas de arquitetura em projetos de software.
+Ao longo do desenvolvimento, estaremos fazendo entregas incrementais e criando releases no GIT para acompanhar o progresso do projeto. Esperamos que este trabalho demonstre nosso conhecimento teÃ³rico e prÃ¡tico adquirido durante a pÃ³s-graduaÃ§Ã£o, alÃ©m de servir como um exemplo de aplicaÃ§Ã£o das melhores prÃ¡ticas de arquitetura em projetos de software.
 
-Sinta-se à vontade para entrar em contato conosco se tiver alguma dúvida ou sugestão. Agradecemos pelo interesse em nosso projeto!
+Sinta-se Ã  vontade para entrar em contato conosco se tiver alguma dÃºvida ou sugestÃ£o. Agradecemos pelo interesse em nosso projeto!
 
 
-> :construction: Projeto em construção :construction:
+> :construction: Projeto em construÃ§Ã£o :construction:
 
 License: [MIT](License.txt)
 
 # Bando de Dados
 
-Decidimos manter o PostgreSQL como o banco de dados para este microserviço. A escolha foi definida na experiência que o time possui com ele, o que facilita o trabalho. Além disso, fizemos uma limpeza no banco de dados, removendo tabelas desnecessárias e mantendo apenas as que são essenciais para este projeto. Assim, o banco está mais enxuto e alinhado com as nossas necessidades atuais.
+Decidimos manter o PostgreSQL como o banco de dados para este microserviÃ§o. A escolha foi definida na experiÃªncia que o time possui com ele, o que facilita o trabalho. AlÃ©m disso, fizemos uma limpeza no banco de dados, removendo tabelas desnecessÃ¡rias e mantendo apenas as que sÃ£o essenciais para este projeto. Assim, o banco estÃ¡ mais enxuto e alinhado com as nossas necessidades atuais.
 
-# ?? Testando a API
+# âŒ¨ï¸ Testando a API
 
 **Importante**
-Você pode baixar o projeto e executá-lo em seu ambiente local com o Visual Studio. Embora o projeto esteja hospedado em nossa infraestrutura na AWS, também o apresentamos aos professores em um vídeo demonstrando seu funcionamento.
+VocÃª pode baixar o projeto e executÃ¡-lo em seu ambiente local com o Visual Studio. Embora o projeto esteja hospedado em nossa infraestrutura na AWS, tambÃ©m o apresentamos aos professores em um vÃ­deo demonstrando seu funcionamento.
 
-Isso permite que você experimente a funcionalidade da API em seu próprio ambiente e explore seu comportamento. Se tiver alguma dúvida ou precisar de assistência, sinta-se à vontade para entrar em contato conosco.
+Isso permite que vocÃª experimente a funcionalidade da API em seu prÃ³prio ambiente e explore seu comportamento. Se tiver alguma dÃºvida ou precisar de assistÃªncia, sinta-se Ã  vontade para entrar em contato conosco.
 
-Você pode testar esta API de duas maneiras: usando o Postman ou o Swagger, que está configurado no projeto.
+VocÃª pode testar esta API de duas maneiras: usando o Postman ou o Swagger, que estÃ¡ configurado no projeto.
 
 Acessando o Swagger:
 
 Para acessar o Swagger do projeto localmente, utilize o seguinte link:
 - http://localhost:PortalLocal/swagger/index.html
 
-O Swagger já contém exemplos de chamadas com dados reais.
+O Swagger jÃ¡ contÃ©m exemplos de chamadas com dados reais.
 
 Lembre-se de adicionar o token obtido na resposta da chamada no menu "Authorize".
 
-Autenticação:
-As chamadas requerem autenticação. Para obter um token Bearer, você pode através do seguinte projeto: https://github.com/SOAT1-GRP13/TechChallenge-SOAT1-GRP13-Auth.
+AutenticaÃ§Ã£o:
+As chamadas requerem autenticaÃ§Ã£o. Para obter um token Bearer, vocÃª pode atravÃ©s do seguinte projeto: https://github.com/SOAT1-GRP13/TechChallenge-SOAT1-GRP13-Auth.
 
-Se você preferir testar nosso serviço de autenticação localmente, siga as orientações no seguinte repositório:
+Se vocÃª preferir testar nosso serviÃ§o de autenticaÃ§Ã£o localmente, siga as orientaÃ§Ãµes no seguinte repositÃ³rio:
 - https://github.com/christiandmelo/TechChallenge-SOAT1-GRP13-Auth
 
-# ??? Abrir e rodar o projeto utilizando o docker
+# ğŸ› ï¸ Abrir e rodar o projeto utilizando o docker
 
 Para o correto funcionamento precisa do docker instalado.
 
@@ -55,13 +55,13 @@ Com o docker instalado, acesse a pasta raiz do projeto e execute o comando abaix
 docker-compose up
 ```
 
-# ?? Documentação da API
+# ğŸ“’ DocumentaÃ§Ã£o da API
 
-No projeto foi instalado o REDOC e pode ser acessado através do link abaixo:
+No projeto foi instalado o REDOC e pode ser acessado atravÃ©s do link abaixo:
 
 - http://localhost:PortalLocal/api-docs/index.html
 
-# ?? Tecnologias utilizadas
+# âœ”ï¸ Tecnologias utilizadas
 
 - ``.Net 6``
 - ``Postgres``
