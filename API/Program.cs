@@ -11,6 +11,15 @@ using Domain.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configurando LoggerFactory e criando uma instância de ILogger
+var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+    builder.AddDebug();
+});
+var logger = loggerFactory.CreateLogger<Program>();
+
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -19,6 +28,8 @@ string secret = "";
 
 if (builder.Environment.IsProduction())
 {
+    logger.LogInformation("Ambiente de Producao detectado.");
+
     builder.Configuration.AddAmazonSecretsManager("us-west-2", "pedido-secret");
 
     connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
@@ -27,16 +38,14 @@ if (builder.Environment.IsProduction())
 }
 else
 {
-    //local
+    logger.LogInformation("Ambiente de Desenvolvimento/Local detectado.");
+
     connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
 
     secret = builder.Configuration.GetSection("ClientSecret").Value ?? string.Empty;
 }
 
 builder.Services.Configure<Secrets>(builder.Configuration);
-
-// builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//         options.UseNpgsql(connectionString));
 
 builder.Services.AddDbContext<PedidosContext>(options =>
         options.UseNpgsql(connectionString));
