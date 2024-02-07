@@ -29,7 +29,7 @@ namespace Infra.Catalogo.Repository
 
         public async Task<Produto> ObterPorId(Guid id)
         {
-            var response = await _httpClient.GetAsync($"/produto/Catalogo/busca_produto/{id}");
+            var response = await _httpClient.GetAsync($"/Catalogo/busca_produto/{id}");
 
             if (response.IsSuccessStatusCode)
             {

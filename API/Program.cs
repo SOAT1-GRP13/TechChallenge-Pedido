@@ -1,13 +1,13 @@
-using API.Data;
 using API.Setup;
 using Infra.Pedidos;
-using Infra.Catalogo;
+using Infra.RabbitMQ;
+using Domain.RabbitMQ;
 using System.Reflection;
+using Domain.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Application.Pedidos.AutoMapper;
 using Swashbuckle.AspNetCore.Filters;
 using Application.Catalogo.AutoMapper;
-using Domain.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +43,10 @@ else
     connectionString = builder.Configuration.GetSection("ConnectionString").Value ?? string.Empty;
 
     secret = builder.Configuration.GetSection("ClientSecret").Value ?? string.Empty;
+
+    var rabbitMQOptions = new RabbitMQOptions();
+    builder.Configuration.GetSection("RabbitMQ").Bind(rabbitMQOptions);
+    builder.Services.AddSingleton(rabbitMQOptions);
 }
 
 builder.Services.Configure<Secrets>(builder.Configuration);
@@ -51,6 +55,8 @@ builder.Services.AddDbContext<PedidosContext>(options =>
         options.UseNpgsql(connectionString));
 
 builder.Services.AddAuthenticationJWT(secret);
+
+builder.Services.AddSingleton<IRabbitMQService, RabbitMQService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Domain.Pedidos;
+using Domain.RabbitMQ;
+using Domain.Pagamento;
 using Domain.Base.DomainObjects;
 using Application.Pedidos.Queries.DTO;
 using Application.Pedidos.Boundaries;
-using Domain.Pagamento;
+using System.Text.Json;
 
 namespace Application.Pedidos.UseCases
 {
@@ -13,17 +15,20 @@ namespace Application.Pedidos.UseCases
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IMapper _mapper;
+        private readonly IRabbitMQService _rabbitMQService;
         #endregion
 
         #region Construtor
         public PedidoUseCase(
             IPedidoRepository pedidoRepository,
             IMapper mapper,
-            IPagamentoRepository pagamentoRepository)
+            IPagamentoRepository pagamentoRepository,
+            IRabbitMQService rabbitMQService)
         {
             _pedidoRepository = pedidoRepository;
             _mapper = mapper;
             _pagamentoRepository = pagamentoRepository;
+            _rabbitMQService = rabbitMQService;
         }
         #endregion
 
@@ -58,6 +63,7 @@ namespace Application.Pedidos.UseCases
 
             return await _pedidoRepository.UnitOfWork.Commit();
         }
+
         public async Task<bool> AtualizarItem(Guid clienteId, Guid produtoId, int quantidade)
         {
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorClienteId(clienteId);
@@ -121,20 +127,15 @@ namespace Application.Pedidos.UseCases
         {
             var pedido = await _pedidoRepository.ObterPorId(pedidoId) ?? throw new DomainException("Pedido não encontrado!");
 
-
-            var qrData = await _pagamentoRepository.GeraPedidoQrCode(pedido);
-
-            if (string.IsNullOrEmpty(qrData))
-            {
-                throw new DomainException("Falha ao integrar com o MercadoPago");
-            }
-
             pedido.IniciarPedido();
 
             _pedidoRepository.Atualizar(pedido);
             await _pedidoRepository.UnitOfWork.Commit();
 
-            return new ConfirmarPedidoOutput(qrData, pedidoId);
+            string mensagem = JsonSerializer.Serialize(pedido);
+            _rabbitMQService.PublicaMensagem("pedido_iniciado", mensagem);
+
+            return new ConfirmarPedidoOutput("TODO->MUDAR_NAO_PODEMOS_RETORNAR_POR_AQUI", pedidoId);
         }
 
         public async Task<bool> FinalizarPedido(Guid pedidoId)

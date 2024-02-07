@@ -1,4 +1,5 @@
 ﻿using Domain.Base.DomainObjects;
+using System.Text.Json.Serialization;
 
 namespace Domain.Pedidos
 {
@@ -11,6 +12,7 @@ namespace Domain.Pedidos
         public decimal ValorUnitario { get; private set; }
 
         // Entity Relacionamento.
+        [JsonIgnore]
         public Pedido Pedido { get; set; }
 
         public PedidoItem(Guid produtoId, string produtoNome, int quantidade, decimal valorUnitario)
