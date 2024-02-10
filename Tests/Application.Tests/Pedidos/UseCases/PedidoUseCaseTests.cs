@@ -3,7 +3,6 @@ using Application.Pedidos.UseCases;
 using AutoMapper;
 using Domain.Base.Data;
 using Domain.Base.DomainObjects;
-using Domain.Pagamento;
 using Domain.Pedidos;
 using Moq;
 
@@ -12,7 +11,6 @@ namespace Application.Tests.Pedidos.UseCases
     public class PedidoUseCaseTests
     {
         private readonly Mock<IPedidoRepository> _pedidoRepositoryMock;
-        private readonly Mock<IPagamentoRepository> _pagamentoRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly PedidoUseCase _pedidoUseCase;
@@ -20,7 +18,6 @@ namespace Application.Tests.Pedidos.UseCases
         public PedidoUseCaseTests()
         {
             _pedidoRepositoryMock = new Mock<IPedidoRepository>();
-            _pagamentoRepositoryMock = new Mock<IPagamentoRepository>();
             _mapperMock = new Mock<IMapper>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _pedidoUseCase = new PedidoUseCase(_pedidoRepositoryMock.Object, _mapperMock.Object);
@@ -221,9 +218,6 @@ namespace Application.Tests.Pedidos.UseCases
             var pedidoId = Guid.NewGuid();
             var pedido = new Pedido(pedidoId, false, 0, 100);
             _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync(pedido);
-
-            var qrData = "some-qr-data";
-            _pagamentoRepositoryMock.Setup(r => r.GeraPedidoQrCode(pedido)).ReturnsAsync(qrData);
 
             _unitOfWorkMock.Setup(u => u.Commit()).ReturnsAsync(true);
 

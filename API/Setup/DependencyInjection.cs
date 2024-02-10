@@ -1,23 +1,20 @@
 ﻿using Application.Pedidos.Commands;
 using Domain.Catalogo;
 using Domain.Pedidos;
-using Infra.Catalogo.Repository;
-using Infra.Pedidos.Repository;
-using Infra.Pedidos;
+using Polly;
 using MediatR;
-using Domain.Base.Communication.Mediator;
-using Domain.Base.Messages.CommonMessages.Notifications;
+using System.Net;
+using Infra.Pedidos;
+using Polly.Extensions.Http;
+using Infra.Pedidos.Repository;
+using Infra.Catalogo.Repository;
 using Application.Pedidos.Queries;
 using Application.Pedidos.Handlers;
-using Application.Pedidos.Boundaries;
 using Application.Pedidos.UseCases;
 using Application.Catalogo.Queries;
-using Polly.Extensions.Http;
-using System.Net;
-using Polly;
-using Domain.Pagamento;
-using Infra.Pagamento.Repository;
 using Application.Pedidos.Queries.DTO;
+using Domain.Base.Communication.Mediator;
+using Domain.Base.Messages.CommonMessages.Notifications;
 
 namespace API.Setup
 {
@@ -49,9 +46,6 @@ namespace API.Setup
             services.AddScoped<IPedidoQueries, PedidoQueries>();
             services.AddScoped<IPedidoUseCase, PedidoUseCase>();
             services.AddScoped<PedidosContext>();
-
-            //Pagamento
-            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 
             services.AddScoped<IRequestHandler<AdicionarItemPedidoCommand, bool>, AdicionarItemPedidoCommandHandler>();
             services.AddScoped<IRequestHandler<AtualizarItemPedidoCommand, bool>, AtualizarItemPedidoCommandHandler>();
