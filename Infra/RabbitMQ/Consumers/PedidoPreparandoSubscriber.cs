@@ -10,21 +10,22 @@ using Application.Pedidos.Queries.DTO;
 using Domain.Base.Communication.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
+
 namespace Infra.RabbitMQ.Consumers
 {
-    public class PedidoPagoSubscriber : BackgroundService
+    public class PedidoPreparandoSubscriber : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly string _nomeDaFila;
         private IConnection _connection;
         private IModel _channel;
 
-        public PedidoPagoSubscriber(
+        public PedidoPreparandoSubscriber(
             IServiceScopeFactory scopeFactory,
             RabbitMQOptions options)
         {
             _scopeFactory = scopeFactory;
-            _nomeDaFila = options.QueuePedidoPago;
+            _nomeDaFila = options.QueuePedidoPreparando;
 
             _connection = new ConnectionFactory()
             {
@@ -59,7 +60,7 @@ namespace Infra.RabbitMQ.Consumers
                     if (pedidoPago is null)
                         return;
 
-                    var input = new AtualizarStatusPedidoInput(pedidoPago.PedidoId, (int)PedidoStatus.Pago);
+                    var input = new AtualizarStatusPedidoInput(pedidoPago.PedidoId, (int)PedidoStatus.EmPreparacao);
                     var command = new AtualizarStatusPedidoCommand(input);
                     mediatorHandler.EnviarComando<AtualizarStatusPedidoCommand, bool>(command).Wait();
                 }

@@ -9,6 +9,8 @@
             Password = string.Empty;
             QueuePedidoConfirmado = string.Empty;
             QueuePedidoPago = string.Empty;
+            QueuePedidoPreparando = string.Empty;
+            QueuePedidoPronto = string.Empty;
         }
 
         public string Hostname { get; set; }
@@ -17,5 +19,7 @@
         public string Password { get; set; }
         public string QueuePedidoConfirmado { get; set; }
         public string QueuePedidoPago { get; set; }
+        public string QueuePedidoPreparando { get; set; }
+        public string QueuePedidoPronto { get; set; }
     }
 }

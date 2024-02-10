@@ -68,6 +68,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 
 builder.Services.AddSingleton<IRabbitMQService, RabbitMQService>();
 builder.Services.AddHostedService<PedidoPagoSubscriber>();
+builder.Services.AddHostedService<PedidoPreparandoSubscriber>();
+builder.Services.AddHostedService<PedidoPrrontoSubscriber>();
 
 builder.Services.RegisterServices();
 
