@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Pedidos.Queries;
 using Application.Pedidos.Commands;
-using Application.Catalogo.Queries;
 using Application.Pedidos.Queries.DTO;
 using Application.Pedidos.Boundaries;
 using Microsoft.AspNetCore.Authorization;
@@ -17,16 +16,13 @@ namespace API.Controllers
     [SwaggerTag("Endpoints relacionados ao carrinho, sendo necessário se autenticar e o clienteId é pego de forma automatica")]
     public class CarrinhoController : ControllerBase
     {
-        private readonly IProdutosQueries _produtosQueries;
         private readonly IPedidoQueries _pedidoQueries;
         private readonly IMediatorHandler _mediatorHandler;
 
         public CarrinhoController(INotificationHandler<DomainNotification> notifications,
-                                  IProdutosQueries produtosQueries,
                                   IMediatorHandler mediatorHandler,
                                   IPedidoQueries pedidoQueries) : base(notifications, mediatorHandler)
         {
-            _produtosQueries = produtosQueries;
             _mediatorHandler = mediatorHandler;
             _pedidoQueries = pedidoQueries;
         }
@@ -45,12 +41,7 @@ namespace API.Controllers
         {
             try
             {
-                var produto = await _produtosQueries.ObterPorId(input.Id);
-                if (produto is null)
-                    return NotFound();
-
-
-                var command = new AdicionarItemPedidoCommand(ObterClienteId(), produto.Id, produto.Nome, input.Quantidade, produto.Valor);
+                var command = new AdicionarItemPedidoCommand(ObterClienteId(), input.Id, input.Nome, input.Quantidade, input.Valor);
                 await _mediatorHandler.EnviarComando<AdicionarItemPedidoCommand, bool>(command);
 
                 if (!OperacaoValida())
@@ -80,10 +71,6 @@ namespace API.Controllers
         {
             try
             {
-                var produto = await _produtosQueries.ObterPorId(input.Id);
-                if (produto is null)
-                    return NotFound();
-
                 var command = new AtualizarItemPedidoCommand(ObterClienteId(), input.Id, input.Quantidade);
                 await _mediatorHandler.EnviarComando<AtualizarItemPedidoCommand, bool>(command);
 
@@ -112,10 +99,6 @@ namespace API.Controllers
         {
             try
             {
-                var produto = await _produtosQueries.ObterPorId(id);
-                if (produto is null)
-                    return NotFound();
-
                 var command = new RemoverItemPedidoCommand(ObterClienteId(), id);
                 await _mediatorHandler.EnviarComando<RemoverItemPedidoCommand, bool>(command);
 

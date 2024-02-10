@@ -355,7 +355,7 @@ namespace Infra.Tests.Pedidos.Repository
                 .UseInMemoryDatabase(databaseName: "TestePedidoDbDispose")
                 .Options;
 
-            var dbContext = new PedidosContext(options, null);
+            var dbContext = new PedidosContext(options);
 
             return dbContext;
         }

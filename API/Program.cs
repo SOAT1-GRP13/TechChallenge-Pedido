@@ -8,7 +8,6 @@ using Infra.RabbitMQ.Consumers;
 using Microsoft.EntityFrameworkCore;
 using Application.Pedidos.AutoMapper;
 using Swashbuckle.AspNetCore.Filters;
-using Application.Catalogo.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,7 +61,6 @@ builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenConfig();
 
-builder.Services.AddAutoMapper(typeof(ProdutosMappingProfile));
 builder.Services.AddAutoMapper(typeof(PedidosMappingProfile));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 

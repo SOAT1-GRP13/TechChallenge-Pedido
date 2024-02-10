@@ -1,18 +1,16 @@
-﻿using API.Controllers;
-using Application.Catalogo.Dto;
-using Application.Catalogo.Queries;
-using Application.Pedidos.Boundaries;
-using Application.Pedidos.Commands;
+﻿using Moq;
+using MediatR;
+using API.Controllers;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Application.Pedidos.Queries;
+using Application.Pedidos.Commands;
+using Application.Pedidos.Boundaries;
 using Application.Pedidos.Queries.DTO;
 using Domain.Base.Communication.Mediator;
-using Domain.Base.Messages.CommonMessages.Notifications;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using System.Security.Claims;
+using Domain.Base.Messages.CommonMessages.Notifications;
 
 namespace API.Tests.Controllers
 {
@@ -28,12 +26,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
 
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync((ProdutoDto)null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
 
             var input = new AdicionarItemInput { Id = Guid.NewGuid(), Quantidade = 1 };
 
@@ -52,14 +48,11 @@ namespace API.Tests.Controllers
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandler = serviceProvider.GetRequiredService<IMediatorHandler>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandler, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandler, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
-
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(new ProdutoDto());
 
             var input = new AdicionarItemInput { Id = Guid.NewGuid(), Quantidade = 0 };
 
@@ -84,15 +77,13 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(new ProdutoDto());
             mediatorHandlerMock.Setup(m => m.EnviarComando<AdicionarItemPedidoCommand, bool>(It.IsAny<AdicionarItemPedidoCommand>())).ReturnsAsync(true);
             pedidoQueriesMock.Setup(p => p.ObterCarrinhoCliente(It.IsAny<Guid>())).ReturnsAsync(new CarrinhoDto());
 
@@ -114,12 +105,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ThrowsAsync(new Exception("Erro inesperado"));
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
 
             var input = new AdicionarItemInput { Id = Guid.NewGuid(), Quantidade = 1 };
 
@@ -142,12 +131,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
 
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync((ProdutoDto)null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
 
             var input = new AtualizarItemInput { Id = Guid.NewGuid(), Quantidade = 1 };
 
@@ -166,14 +153,11 @@ namespace API.Tests.Controllers
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandler = serviceProvider.GetRequiredService<IMediatorHandler>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandler, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandler, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
-
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(new ProdutoDto());
 
             var input = new AtualizarItemInput { Id = Guid.NewGuid(), Quantidade = 0 };
 
@@ -195,15 +179,13 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(new ProdutoDto());
             mediatorHandlerMock.Setup(m => m.EnviarComando<AtualizarItemPedidoCommand, bool>(It.IsAny<AtualizarItemPedidoCommand>())).ReturnsAsync(true);
             pedidoQueriesMock.Setup(p => p.ObterCarrinhoCliente(It.IsAny<Guid>())).ReturnsAsync(new CarrinhoDto());
 
@@ -225,12 +207,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ThrowsAsync(new Exception("Erro inesperado"));
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
 
             var input = new AtualizarItemInput { Id = Guid.NewGuid(), Quantidade = 1 };
 
@@ -253,12 +233,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
 
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync((ProdutoDto)null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
 
             var guid = Guid.NewGuid();
 
@@ -277,14 +255,11 @@ namespace API.Tests.Controllers
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandler = serviceProvider.GetRequiredService<IMediatorHandler>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandler, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandler, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
-
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(new ProdutoDto());
 
             var guid = Guid.Empty;
 
@@ -306,15 +281,13 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ReturnsAsync(new ProdutoDto());
             mediatorHandlerMock.Setup(m => m.EnviarComando<RemoverItemPedidoCommand, bool>(It.IsAny<RemoverItemPedidoCommand>())).ReturnsAsync(true);
             pedidoQueriesMock.Setup(p => p.ObterCarrinhoCliente(It.IsAny<Guid>())).ReturnsAsync(new CarrinhoDto());
 
@@ -336,12 +309,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-            produtosQueriesMock.Setup(p => p.ObterPorId(It.IsAny<Guid>())).ThrowsAsync(new Exception("Erro inesperado"));
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
 
             var guid = Guid.NewGuid();
 
@@ -364,11 +335,10 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
@@ -390,12 +360,11 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
             var notificationsMock = new Mock<INotificationHandler<DomainNotification>>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
@@ -418,12 +387,11 @@ namespace API.Tests.Controllers
                .BuildServiceProvider();
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-            var produtosQueriesMock = new Mock<IProdutosQueries>();
             var pedidoQueriesMock = new Mock<IPedidoQueries>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
             var notificationsMock = new Mock<INotificationHandler<DomainNotification>>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, produtosQueriesMock.Object, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             pedidoQueriesMock.Setup(p => p.ObterCarrinhoCliente(It.IsAny<Guid>())).ThrowsAsync(new Exception("Erro inesperado"));
 
             // Act
@@ -448,7 +416,7 @@ namespace API.Tests.Controllers
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, null, mediatorHandlerMock.Object, null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, null);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
@@ -464,7 +432,7 @@ namespace API.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnedValue = Assert.IsType<ConfirmarPedidoOutput>(okResult.Value);
+            var returnedValue = Assert.IsType<CarrinhoDto>(okResult.Value);
             Assert.Equal(confirmarPedidoOutput.PedidoId, returnedValue.PedidoId);
         }
 
@@ -477,7 +445,7 @@ namespace API.Tests.Controllers
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandler = serviceProvider.GetRequiredService<IMediatorHandler>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, null, mediatorHandler, null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandler, null);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
