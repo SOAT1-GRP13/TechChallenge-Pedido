@@ -23,7 +23,7 @@ namespace Application.Tests.Pedidos.UseCases
             _pagamentoRepositoryMock = new Mock<IPagamentoRepository>();
             _mapperMock = new Mock<IMapper>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _pedidoUseCase = new PedidoUseCase(_pedidoRepositoryMock.Object, _mapperMock.Object, _pagamentoRepositoryMock.Object);
+            _pedidoUseCase = new PedidoUseCase(_pedidoRepositoryMock.Object, _mapperMock.Object);
 
             _pedidoRepositoryMock.SetupGet(r => r.UnitOfWork).Returns(_unitOfWorkMock.Object);
         }
@@ -232,7 +232,6 @@ namespace Application.Tests.Pedidos.UseCases
 
             // Assert
             Assert.NotNull(resultado);
-            Assert.Equal(qrData, resultado.QrData);
             Assert.Equal(pedidoId, resultado.PedidoId);
             _pedidoRepositoryMock.Verify(r => r.Atualizar(It.IsAny<Pedido>()), Times.Once());
             _unitOfWorkMock.Verify(u => u.Commit(), Times.Once());

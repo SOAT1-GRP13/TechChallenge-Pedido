@@ -162,7 +162,7 @@ namespace API.Controllers
         [SwaggerOperation(
             Summary = "Confirma o pedido",
             Description = "Confirma o pedido e é nesta etapa que deve integrar com o mercado pago trazendo o QR Code.")]
-        [SwaggerResponse(200, "Retorna pedido confirmado", typeof(ConfirmarPedidoOutput))]
+        [SwaggerResponse(200, "Retorna pedido confirmado", typeof(CarrinhoDto))]
         [SwaggerResponse(404, "Caso não encontre nenhum carrinho")]
         [SwaggerResponse(400, "Caso não obedeça alguma regra de negocio")]
         [SwaggerResponse(500, "Caso algo inesperado aconteça")]
@@ -171,7 +171,7 @@ namespace API.Controllers
             //IniciarPedidoCommand Dispara todos os eventos de dominio para criar o pedido, realizar pagamento e finalizar pedido.
             var command = new IniciarPedidoCommand(input.PedidoId, ObterClienteId());
 
-            var pedido = await _mediatorHandler.EnviarComando<IniciarPedidoCommand, ConfirmarPedidoOutput>(command);
+            var pedido = await _mediatorHandler.EnviarComando<IniciarPedidoCommand, CarrinhoDto>(command);
 
             if (!OperacaoValida())
                 return StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());

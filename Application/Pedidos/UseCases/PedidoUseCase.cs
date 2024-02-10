@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Pedidos;
-using Domain.RabbitMQ;
-using Domain.Pagamento;
 using Domain.Base.DomainObjects;
 using Application.Pedidos.Queries.DTO;
-using Application.Pedidos.Boundaries;
-using System.Text.Json;
 
 namespace Application.Pedidos.UseCases
 {
@@ -13,22 +9,16 @@ namespace Application.Pedidos.UseCases
     {
         #region Propriedades
         private readonly IPedidoRepository _pedidoRepository;
-        private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IMapper _mapper;
-        private readonly IRabbitMQService _rabbitMQService;
         #endregion
 
         #region Construtor
         public PedidoUseCase(
             IPedidoRepository pedidoRepository,
-            IMapper mapper,
-            IPagamentoRepository pagamentoRepository,
-            IRabbitMQService rabbitMQService)
+            IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
             _mapper = mapper;
-            _pagamentoRepository = pagamentoRepository;
-            _rabbitMQService = rabbitMQService;
         }
         #endregion
 
@@ -53,7 +43,9 @@ namespace Application.Pedidos.UseCases
 
                 if (pedidoItemExistente)
                 {
-                    _pedidoRepository.AtualizarItem(pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId));
+                    var item = pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId);
+                    if(item is not null)
+                        _pedidoRepository.AtualizarItem(item);
                 }
                 else
                 {
@@ -123,7 +115,7 @@ namespace Application.Pedidos.UseCases
             return _mapper.Map<PedidoDto>(pedido);
         }
 
-        public async Task<ConfirmarPedidoOutput> IniciarPedido(Guid pedidoId)
+        public async Task<CarrinhoDto> IniciarPedido(Guid pedidoId)
         {
             var pedido = await _pedidoRepository.ObterPorId(pedidoId) ?? throw new DomainException("Pedido não encontrado!");
 
@@ -132,10 +124,7 @@ namespace Application.Pedidos.UseCases
             _pedidoRepository.Atualizar(pedido);
             await _pedidoRepository.UnitOfWork.Commit();
 
-            string mensagem = JsonSerializer.Serialize(pedido);
-            _rabbitMQService.PublicaMensagem("pedido_iniciado", mensagem);
-
-            return new ConfirmarPedidoOutput("TODO->MUDAR_NAO_PODEMOS_RETORNAR_POR_AQUI", pedidoId);
+            return _mapper.Map<CarrinhoDto>(pedido);
         }
 
         public async Task<bool> FinalizarPedido(Guid pedidoId)

@@ -17,6 +17,7 @@ using System.Net;
 using Polly;
 using Domain.Pagamento;
 using Infra.Pagamento.Repository;
+using Application.Pedidos.Queries.DTO;
 
 namespace API.Setup
 {
@@ -54,8 +55,9 @@ namespace API.Setup
 
             services.AddScoped<IRequestHandler<AdicionarItemPedidoCommand, bool>, AdicionarItemPedidoCommandHandler>();
             services.AddScoped<IRequestHandler<AtualizarItemPedidoCommand, bool>, AtualizarItemPedidoCommandHandler>();
+            services.AddScoped<IRequestHandler<AtualizarStatusPedidoCommand, bool>, AtualizarStatusPedidoCommandHandler>();
             services.AddScoped<IRequestHandler<RemoverItemPedidoCommand, bool>, RemoverItemPedidoCommandHandler>();
-            services.AddScoped<IRequestHandler<IniciarPedidoCommand, ConfirmarPedidoOutput>, IniciarPedidoCommandHandler>();
+            services.AddScoped<IRequestHandler<IniciarPedidoCommand, CarrinhoDto>, IniciarPedidoCommandHandler>();
         }
     }
 }

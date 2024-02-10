@@ -454,9 +454,9 @@ namespace API.Tests.Controllers
 
             var pedidoId = Guid.NewGuid();
             var iniciarPedidoCommand = new IniciarPedidoCommand(pedidoId, Guid.NewGuid());
-            var confirmarPedidoOutput = new ConfirmarPedidoOutput("qrData", pedidoId);
+            var confirmarPedidoOutput = new CarrinhoDto();
 
-            mediatorHandlerMock.Setup(m => m.EnviarComando<IniciarPedidoCommand, ConfirmarPedidoOutput>(It.IsAny<IniciarPedidoCommand>()))
+            mediatorHandlerMock.Setup(m => m.EnviarComando<IniciarPedidoCommand, CarrinhoDto>(It.IsAny<IniciarPedidoCommand>()))
                                .ReturnsAsync(confirmarPedidoOutput);
 
             // Act
@@ -465,7 +465,6 @@ namespace API.Tests.Controllers
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedValue = Assert.IsType<ConfirmarPedidoOutput>(okResult.Value);
-            Assert.Equal(confirmarPedidoOutput.QrData, returnedValue.QrData);
             Assert.Equal(confirmarPedidoOutput.PedidoId, returnedValue.PedidoId);
         }
 

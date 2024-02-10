@@ -64,7 +64,8 @@ namespace Domain.Pedidos
 
             var itemExistente = PedidoItems.FirstOrDefault(p => p.ProdutoId == item.ProdutoId);
 
-            if (itemExistente == null) throw new DomainException("O item não pertence ao pedido");
+            if (itemExistente is null) throw new DomainException("O item não pertence ao pedido");
+
             _pedidoItems.Remove(itemExistente);
 
             CalcularValorPedido();
@@ -77,7 +78,8 @@ namespace Domain.Pedidos
 
             var itemExistente = PedidoItems.FirstOrDefault(p => p.ProdutoId == item.ProdutoId);
 
-            if (itemExistente == null) throw new DomainException("O item não pertence ao pedido");
+            if (itemExistente is null) 
+                throw new DomainException("O item não pertence ao pedido");
 
             _pedidoItems.Remove(itemExistente);
             _pedidoItems.Add(item);

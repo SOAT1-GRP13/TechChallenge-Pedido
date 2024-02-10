@@ -14,7 +14,7 @@ namespace Application.Pedidos.UseCases
 
         Task<PedidoDto> TrocaStatusPedido(Guid idPedido, PedidoStatus novoStatus);
 
-        Task<ConfirmarPedidoOutput> IniciarPedido(Guid pedidoId);
+        Task<CarrinhoDto> IniciarPedido(Guid pedidoId);
 
         Task<bool> FinalizarPedido(Guid pedidoId);
 

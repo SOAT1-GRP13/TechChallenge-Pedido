@@ -9,6 +9,7 @@ namespace Application.Pedidos.AutoMapper
         public PedidosMappingProfile()
         {
             CreateMap<Pedido, PedidoDto>();
+            CreateMap<Pedido, CarrinhoDto>();
         }
     }
 }
