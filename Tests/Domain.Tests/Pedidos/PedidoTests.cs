@@ -15,7 +15,7 @@ namespace Domain.Tests.Pedidos
         {
             // Arrange
             var clienteId = Guid.NewGuid();
-            var pedido = new Pedido(clienteId, false, 0, 0); // Inicializa o pedido com valor total 0
+            var pedido = new Pedido(clienteId, 0); // Inicializa o pedido com valor total 0
 
             var produtoId1 = Guid.NewGuid();
             var produtoNome1 = "Produto 1";
@@ -47,7 +47,7 @@ namespace Domain.Tests.Pedidos
         {
             // Arrange
             var clienteId = Guid.NewGuid();
-            var pedido = new Pedido(clienteId, false, 0, 0);
+            var pedido = new Pedido(clienteId, 0);
 
             var produtoId = Guid.NewGuid();
             var item = new PedidoItem(produtoId, "Produto Teste", 1, 100m);
@@ -67,7 +67,7 @@ namespace Domain.Tests.Pedidos
         {
             // Arrange
             var clienteId = Guid.NewGuid();
-            var pedido = new Pedido(clienteId, false, 0, 0);
+            var pedido = new Pedido(clienteId, 0);
 
             var produtoIdExistente = Guid.NewGuid();
             var itemExistente = new PedidoItem(produtoIdExistente, "Produto Teste", 1, 100m);

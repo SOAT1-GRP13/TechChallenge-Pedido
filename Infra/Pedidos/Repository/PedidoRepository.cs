@@ -24,7 +24,7 @@ namespace Infra.Pedidos.Repository
         public async Task<Pedido> ObterPorId(Guid id)
         {
             var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null) return null;
+            if (pedido is null) return null;
 
             await _context.Entry(pedido)
                 .Collection(i => i.PedidoItems).LoadAsync(); // Popula pedido evitando querys com join
@@ -40,7 +40,7 @@ namespace Infra.Pedidos.Repository
         public async Task<Pedido> ObterPedidoRascunhoPorClienteId(Guid clienteId)
         {
             var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.ClienteId == clienteId && p.PedidoStatus == PedidoStatus.Rascunho);
-            if (pedido == null) return null;
+            if (pedido is null) return null;
 
             await _context.Entry(pedido)
                 .Collection(i => i.PedidoItems).LoadAsync(); // Popula pedido evitando querys com join

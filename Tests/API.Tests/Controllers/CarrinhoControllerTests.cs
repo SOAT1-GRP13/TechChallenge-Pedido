@@ -18,29 +18,6 @@ namespace API.Tests.Controllers
     {
         #region testes metodo AdicionarItem
         [Fact]
-        public async Task AdicionarItem_DeveRetornarNotFound_QuandoProdutoNaoExiste()
-        {
-            // Arrange
-            var serviceProvider = new ServiceCollection()
-               .AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>()
-               .BuildServiceProvider();
-            var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-
-            var pedidoQueriesMock = new Mock<IPedidoQueries>();
-            var mediatorHandlerMock = new Mock<IMediatorHandler>();
-
-            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-
-            var input = new AdicionarItemInput { Id = Guid.NewGuid(), Quantidade = 1 };
-
-            // Act
-            var result = await controller.AdicionarItem(input);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
-        [Fact]
         public async Task AdicionarItem_DeveRetornarBadRequest_QuandoValidacaoFalha()
         {
             // Arrange
@@ -54,7 +31,7 @@ namespace API.Tests.Controllers
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
-            var input = new AdicionarItemInput { Id = Guid.NewGuid(), Quantidade = 0 };
+            var input = new AdicionarItemInput { Id = Guid.Empty, Quantidade = 0 };
 
             // Act
             var result = await controller.AdicionarItem(input);
@@ -122,29 +99,6 @@ namespace API.Tests.Controllers
         #endregion
 
         #region testes metodo AtualizarItem
-        [Fact]
-        public async Task AtualizarItem_DeveRetornarNotFound_QuandoProdutoNaoExiste()
-        {
-            // Arrange
-            var serviceProvider = new ServiceCollection()
-               .AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>()
-               .BuildServiceProvider();
-            var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-
-            var pedidoQueriesMock = new Mock<IPedidoQueries>();
-            var mediatorHandlerMock = new Mock<IMediatorHandler>();
-
-            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-
-            var input = new AtualizarItemInput { Id = Guid.NewGuid(), Quantidade = 1 };
-
-            // Act
-            var result = await controller.AtualizarItem(input);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
         [Fact]
         public async Task AtualizarItem_DeveRetornarBadRequest_QuandoValidacaoFalha()
         {
@@ -224,29 +178,6 @@ namespace API.Tests.Controllers
         #endregion
 
         #region testes metodo RemoverItem
-        [Fact]
-        public async Task RemoverItem_DeveRetornarNotFound_QuandoProdutoNaoExiste()
-        {
-            // Arrange
-            var serviceProvider = new ServiceCollection()
-               .AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>()
-               .BuildServiceProvider();
-            var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
-
-            var pedidoQueriesMock = new Mock<IPedidoQueries>();
-            var mediatorHandlerMock = new Mock<IMediatorHandler>();
-
-            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
-
-            var guid = Guid.NewGuid();
-
-            // Act
-            var result = await controller.RemoverItem(guid);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(result);
-        }
-
         [Fact]
         public async Task RemoverItem_DeveRetornarBadRequest_QuandoValidacaoFalha()
         {

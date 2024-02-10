@@ -29,7 +29,7 @@ namespace Infra.Tests.Pedidos.Repository
             var dbContext = CreateDbContext();
             var repository = new PedidoRepository(dbContext, _mockOptions.Object);
 
-            var pedido = new Pedido(Guid.NewGuid(), false, 0, 100);
+            var pedido = new Pedido(Guid.NewGuid(), 100);
             dbContext.Pedidos.Add(pedido);
             await dbContext.SaveChangesAsync();
 
@@ -68,8 +68,8 @@ namespace Infra.Tests.Pedidos.Repository
             var clienteId = Guid.NewGuid();
             var pedidos = new List<Pedido>
             {
-                new Pedido(clienteId, false, 0, 100),
-                new Pedido(clienteId, false, 0, 200),
+                new Pedido(clienteId, 100),
+                new Pedido(clienteId, 200),
             };
 
             context.Pedidos.AddRange(pedidos);
@@ -93,9 +93,9 @@ namespace Infra.Tests.Pedidos.Repository
             var context = CreateDbContext();
 
             var clienteId = Guid.NewGuid();
-            var pedidoRascunho = new Pedido(clienteId, false, 0, 100);
+            var pedidoRascunho = new Pedido(clienteId, 100);
             pedidoRascunho.TornarRascunho();
-            var pedidoPago = new Pedido(clienteId, false, 0, 200);
+            var pedidoPago = new Pedido(clienteId, 200);
             pedidoPago.ColocarPedidoComoPago();
 
             context.Pedidos.Add(pedidoRascunho);
@@ -120,7 +120,7 @@ namespace Infra.Tests.Pedidos.Repository
 
             var clienteId = Guid.NewGuid();
 
-            var pedido = new Pedido(clienteId, false, 0, 100);
+            var pedido = new Pedido(clienteId, 100);
             pedido.ColocarPedidoComoPago();
             context.Pedidos.Add(pedido);
 
@@ -143,7 +143,7 @@ namespace Infra.Tests.Pedidos.Repository
             var context = CreateDbContext();
 
             var clienteId = Guid.NewGuid();
-            var pedido = new Pedido(clienteId, false, 0, 100);
+            var pedido = new Pedido(clienteId, 100);
             var repository = new PedidoRepository(context, _mockOptions.Object);
 
             // Ação
@@ -164,7 +164,7 @@ namespace Infra.Tests.Pedidos.Repository
             var context = CreateDbContext();
 
             var clienteId = Guid.NewGuid();
-            var pedido = new Pedido(clienteId, false, 0, 100);
+            var pedido = new Pedido(clienteId, 100);
             context.Pedidos.Add(pedido);
             await context.SaveChangesAsync();
 
@@ -187,7 +187,7 @@ namespace Infra.Tests.Pedidos.Repository
         {
             var context = CreateDbContext();
 
-            var pedido = new Pedido(Guid.NewGuid(), false, 0, 100);
+            var pedido = new Pedido(Guid.NewGuid(), 100);
             var pedidoItem = new PedidoItem(Guid.NewGuid(), "Produto Teste", 2, 50);
             pedido.AdicionarItem(pedidoItem);
             context.Pedidos.Add(pedido);
@@ -209,7 +209,7 @@ namespace Infra.Tests.Pedidos.Repository
         {
             var context = CreateDbContext();
 
-            var pedido = new Pedido(Guid.NewGuid(), false, 0, 100);
+            var pedido = new Pedido(Guid.NewGuid(), 100);
             context.Pedidos.Add(pedido);
             await context.SaveChangesAsync();
 
@@ -234,7 +234,7 @@ namespace Infra.Tests.Pedidos.Repository
         {
             var context = CreateDbContext();
 
-            var pedido = new Pedido(Guid.NewGuid(), false, 0, 100);
+            var pedido = new Pedido(Guid.NewGuid(), 100);
             pedido.TornarRascunho();
             var pedidoItem = new PedidoItem(Guid.NewGuid(), "Produto Teste", 2, 50);
             pedido.AdicionarItem(pedidoItem);
@@ -261,7 +261,7 @@ namespace Infra.Tests.Pedidos.Repository
         {
             var context = CreateDbContext();
 
-            var pedido = new Pedido(Guid.NewGuid(), false, 0, 100);
+            var pedido = new Pedido(Guid.NewGuid(), 100);
             var pedidoItem = new PedidoItem(Guid.NewGuid(), "Produto Teste", 2, 50);
             pedido.AdicionarItem(pedidoItem);
 
@@ -284,8 +284,8 @@ namespace Infra.Tests.Pedidos.Repository
         {
             var context = CreateDbContext();
 
-            var pedido1 = new Pedido(Guid.NewGuid(), false, 0, 100);
-            var pedido2 = new Pedido(Guid.NewGuid(), false, 0, 150);
+            var pedido1 = new Pedido(Guid.NewGuid(), 100);
+            var pedido2 = new Pedido(Guid.NewGuid(), 150);
             context.Pedidos.Add(pedido1);
             context.Pedidos.Add(pedido2);
             await context.SaveChangesAsync();
@@ -304,15 +304,15 @@ namespace Infra.Tests.Pedidos.Repository
         {
             var context = CreateDbContext();
 
-            var pedido1 = new Pedido(Guid.NewGuid(), false, 0, 100);
+            var pedido1 = new Pedido(Guid.NewGuid(), 100);
             pedido1.ColocarPedidoComoPago();
-            var pedido2 = new Pedido(Guid.NewGuid(), false, 0, 150);
+            var pedido2 = new Pedido(Guid.NewGuid(), 150);
             pedido2.ColocarPedidoEmPreparacao();
-            var pedido3 = new Pedido(Guid.NewGuid(), false, 0, 200);
+            var pedido3 = new Pedido(Guid.NewGuid(), 200);
             pedido3.TornarRascunho();
-            var pedido4 = new Pedido(Guid.NewGuid(), false, 0, 250);
+            var pedido4 = new Pedido(Guid.NewGuid(), 250);
             pedido4.CancelarPedido();
-            var pedido5 = new Pedido(Guid.NewGuid(), false, 0, 300);
+            var pedido5 = new Pedido(Guid.NewGuid(), 300);
             pedido5.FinalizarPedido();
             context.Pedidos.AddRange(pedido1, pedido2, pedido3, pedido4, pedido5);
             await context.SaveChangesAsync();
@@ -337,7 +337,7 @@ namespace Infra.Tests.Pedidos.Repository
                 .UseInMemoryDatabase(databaseName: "TestePedidoDbDispose")
                 .Options;
 
-            var mockContext = new Mock<PedidosContext>(options, null);
+            var mockContext = new Mock<PedidosContext>(options);
             var repository = new PedidoRepository(mockContext.Object, _mockOptions.Object);
 
             // Act

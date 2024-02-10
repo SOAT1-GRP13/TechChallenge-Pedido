@@ -13,7 +13,7 @@ namespace Domain.Pedidos
         private readonly List<PedidoItem> _pedidoItems;
         public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
 
-        public Pedido(Guid clienteId, bool cupomUtilizado, decimal desconto, decimal valorTotal)
+        public Pedido(Guid clienteId, decimal valorTotal)
         {
             ClienteId = clienteId;
             ValorTotal = valorTotal;
@@ -172,7 +172,7 @@ namespace Domain.Pedidos
             {
                 var pedido = new Pedido
                 {
-                    ClienteId = clienteId, // TODO - Caso o cliente não se identifique usar algum código de cliente anônimo.
+                    ClienteId = clienteId,
                 };
 
                 pedido.TornarRascunho();

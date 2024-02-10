@@ -40,9 +40,6 @@ namespace Infra.Migrations
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MercadoPagoId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("PedidoStatus")
                         .HasColumnType("integer");
 

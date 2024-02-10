@@ -13,7 +13,7 @@ namespace Application.Tests.Pedidos.Queries
             var clienteId = Guid.NewGuid();
             var produtoId = Guid.NewGuid();
             var pedidoItem = new PedidoItem(produtoId, "Produto Teste", 2, 50);
-            var pedido = new Pedido(clienteId, false, 0, 100);
+            var pedido = new Pedido(clienteId, 100);
             pedido.TornarRascunho();
             pedido.AdicionarItem(pedidoItem);
 

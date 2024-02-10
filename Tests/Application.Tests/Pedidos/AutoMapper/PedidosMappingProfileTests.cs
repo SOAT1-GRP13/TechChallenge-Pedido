@@ -20,7 +20,7 @@ namespace Application.Tests.Pedidos.AutoMapper
         public void DeveMapearPedidoParaPedidoDtoCorretamente()
         {
             // Arrange
-            var pedido = new Pedido(Guid.NewGuid(), false, 0, 150m);
+            var pedido = new Pedido(Guid.NewGuid(), 150m);
 
             // Act
             var pedidoDto = _mapper.Map<PedidoDto>(pedido);
