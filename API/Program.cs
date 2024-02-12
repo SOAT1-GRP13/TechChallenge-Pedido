@@ -2,7 +2,6 @@ using API.Setup;
 using Infra.Pedidos;
 using Infra.RabbitMQ;
 using Domain.RabbitMQ;
-using RabbitMQ.Client;
 using System.Reflection;
 using Domain.Configuration;
 using Infra.RabbitMQ.Consumers;

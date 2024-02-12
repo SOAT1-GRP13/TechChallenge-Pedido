@@ -4,27 +4,25 @@ using Moq;
 using System.Text;
 using RabbitMQ.Client;
 
-namespace Infra.Tests
+namespace Infra.Tests.RabbitMQ
 {
     public class RabbitMQServiceTests
     {
         [Fact]
-        public void PublicaMensagem_ShouldPublishMessageToQueue()
+        public void AoPublicaMensagem_DevePublicarMensagemNaFila()
         {
-            // Configuração do Mock para IModel
+            //arrange
             var mockModel = new Mock<IModel>();
 
-            // Instanciação do serviço com a factory mockada
             var rabbitMQService = new RabbitMQService(mockModel.Object);
-
-            // Definição dos parâmetros de teste
             var queueName = "testQueue";
             var message = "Test Message";
             var messageBody = Encoding.UTF8.GetBytes(message);
 
-            // Execução do método a ser testado
+            //act
             rabbitMQService.PublicaMensagem(queueName, message);
 
+            //assert
             mockModel.Verify(ch => ch.QueueDeclare(queueName, true, false, false, null), Times.Once);
         }
 

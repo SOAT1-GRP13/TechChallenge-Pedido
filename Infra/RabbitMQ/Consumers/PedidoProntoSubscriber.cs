@@ -17,25 +17,17 @@ namespace Infra.RabbitMQ.Consumers
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly string _nomeDaFila;
-        private IConnection _connection;
         private IModel _channel;
 
         public PedidoPrrontoSubscriber(
             IServiceScopeFactory scopeFactory,
-            RabbitMQOptions options)
+            RabbitMQOptions options,
+            IModel model)
         {
             _scopeFactory = scopeFactory;
             _nomeDaFila = options.QueuePedidoPronto;
 
-            _connection = new ConnectionFactory()
-            {
-                HostName = options.Hostname,
-                Port = options.Port,
-                UserName = options.Username,
-                Password = options.Password,
-            }.CreateConnection();
-
-            _channel = _connection.CreateModel();
+            _channel = model;
             _channel.ExchangeDeclare(exchange: "trigger", type: ExchangeType.Fanout);
             _channel.QueueDeclare(queue: _nomeDaFila, durable: true, exclusive: false, autoDelete: false, arguments: null);
             _channel.QueueBind(queue: _nomeDaFila,
@@ -74,10 +66,7 @@ namespace Infra.RabbitMQ.Consumers
         public override void Dispose()
         {
             if (_channel.IsOpen)
-            {
                 _channel.Close();
-                _connection.Close();
-            }
 
             base.Dispose();
         }
