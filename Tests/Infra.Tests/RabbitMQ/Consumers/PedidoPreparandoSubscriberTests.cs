@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infra.Tests.RabbitMQ.Consumers
 {
-    public class PedidoPagoSubscriberTests
+    public class PedidoPreparandoSubscriberTests
     {
         [Fact]
         public void AoExecuteAsync_SeNaoConseguirDesSerializarDto_DeveLancarExcessao()
@@ -26,7 +26,7 @@ namespace Infra.Tests.RabbitMQ.Consumers
             mockServiceProvider.Setup(x => x.GetService(typeof(IMediatorHandler))).Returns(mockMediatorHandler.Object);
 
             var options = new RabbitMQOptions { QueuePedidoPago = "testQueue" };
-            var serverFake = new PedidoPagoSubscriberFake(mockScopeFactory.Object, options, mockModel.Object);
+            var serverFake = new PedidoPreparandoSubscriberFake(mockScopeFactory.Object, options, mockModel.Object);
             var consumer = new EventingBasicConsumer(mockModel.Object);
 
             // Simula um evento Received com um corpo de mensagem inválido
@@ -71,7 +71,7 @@ namespace Infra.Tests.RabbitMQ.Consumers
             mockServiceProvider.Setup(x => x.GetService(typeof(IMediatorHandler))).Returns(mockMediatorHandler.Object);
 
             var options = new RabbitMQOptions { QueuePedidoPago = "testQueue" };
-            var serverFake = new PedidoPagoSubscriberFake(mockScopeFactory.Object, options, mockModel.Object);
+            var serverFake = new PedidoPreparandoSubscriberFake(mockScopeFactory.Object, options, mockModel.Object);
             var consumer = new EventingBasicConsumer(mockModel.Object);
 
             var eventArgs = new BasicDeliverEventArgs
@@ -125,9 +125,9 @@ namespace Infra.Tests.RabbitMQ.Consumers
         }
 
         #region metodos privados
-        private class PedidoPagoSubscriberFake : PedidoPagoSubscriber
+        private class PedidoPreparandoSubscriberFake : PedidoPreparandoSubscriber
         {
-            public PedidoPagoSubscriberFake(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(scopeFactory, options, model)
+            public PedidoPreparandoSubscriberFake(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(scopeFactory, options, model)
             {
             }
 
