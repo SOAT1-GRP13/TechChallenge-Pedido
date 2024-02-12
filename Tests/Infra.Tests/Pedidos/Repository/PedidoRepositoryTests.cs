@@ -278,56 +278,6 @@ namespace Infra.Tests.Pedidos.Repository
         }
         #endregion
 
-        #region testes ObterTodosPedidos
-        [Fact]
-        public async Task ObterTodosPedidos_DeveRetornarTodosPedidos()
-        {
-            var context = CreateDbContext();
-
-            var pedido1 = new Pedido(Guid.NewGuid(), 100);
-            var pedido2 = new Pedido(Guid.NewGuid(), 150);
-            context.Pedidos.Add(pedido1);
-            context.Pedidos.Add(pedido2);
-            await context.SaveChangesAsync();
-
-            var repository = new PedidoRepository(context);
-            var pedidos = await repository.ObterTodosPedidos();
-
-            Assert.Contains(pedidos, p => p.Id == pedido1.Id);
-            Assert.Contains(pedidos, p => p.Id == pedido2.Id);
-        }
-        #endregion
-
-        #region testes ObterPedidosParaFila
-        [Fact]
-        public async Task ObterPedidosParaFila_DeveRetornarPedidosConformeStatus()
-        {
-            var context = CreateDbContext();
-
-            var pedido1 = new Pedido(Guid.NewGuid(), 100);
-            pedido1.ColocarPedidoComoPago();
-            var pedido2 = new Pedido(Guid.NewGuid(), 150);
-            pedido2.ColocarPedidoEmPreparacao();
-            var pedido3 = new Pedido(Guid.NewGuid(), 200);
-            pedido3.TornarRascunho();
-            var pedido4 = new Pedido(Guid.NewGuid(), 250);
-            pedido4.CancelarPedido();
-            var pedido5 = new Pedido(Guid.NewGuid(), 300);
-            pedido5.FinalizarPedido();
-            context.Pedidos.AddRange(pedido1, pedido2, pedido3, pedido4, pedido5);
-            await context.SaveChangesAsync();
-
-            var repository = new PedidoRepository(context);
-            var pedidosParaFila = await repository.ObterPedidosParaFila();
-
-            Assert.Contains(pedidosParaFila, p => p.Id == pedido1.Id);
-            Assert.Contains(pedidosParaFila, p => p.Id == pedido2.Id);
-            Assert.DoesNotContain(pedidosParaFila, p => p.Id == pedido3.Id);
-            Assert.DoesNotContain(pedidosParaFila, p => p.Id == pedido4.Id);
-            Assert.DoesNotContain(pedidosParaFila, p => p.Id == pedido5.Id);
-        }
-        #endregion
-
         #region testes Dispose
         [Fact]
         public void Dispose_DeveChamarDisposeDoContexto()

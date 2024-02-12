@@ -15,10 +15,5 @@ namespace Domain.Pedidos
         void AdicionarItem(PedidoItem pedidoItem);
         void AtualizarItem(PedidoItem pedidoItem);
         void RemoverItem(PedidoItem pedidoItem);
-
-        Task<IEnumerable<Pedido>> ObterTodosPedidos();
-
-        Task<IEnumerable<Pedido>> ObterPedidosParaFila();
-
     }
 }
