@@ -1,8 +1,10 @@
 ﻿using Application.Pedidos.Boundaries;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace API.SwaggerExamples
 {
+    [ExcludeFromCodeCoverage]
     public class AdicionarItemInputExample : IExamplesProvider<AdicionarItemInput>
     {
         public AdicionarItemInput GetExamples()

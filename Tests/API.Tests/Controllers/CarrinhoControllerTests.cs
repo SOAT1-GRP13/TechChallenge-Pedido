@@ -346,8 +346,9 @@ namespace API.Tests.Controllers
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandlerMock = new Mock<IMediatorHandler>();
+            var pedidoQueriesMock = new Mock<IPedidoQueries>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
@@ -375,8 +376,9 @@ namespace API.Tests.Controllers
 
             var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
             var mediatorHandler = serviceProvider.GetRequiredService<IMediatorHandler>();
+            var pedidoQueriesMock = new Mock<IPedidoQueries>();
 
-            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandler, null);
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandler, pedidoQueriesMock.Object);
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
