@@ -5,6 +5,11 @@ namespace Application.Pedidos.Boundaries
 {
     public class AdicionarItemInput
     {
+        public AdicionarItemInput()
+        {
+            Nome = string.Empty;
+        }
+
         [Required]
         [SwaggerSchema(
             Title = "Guid do produto",

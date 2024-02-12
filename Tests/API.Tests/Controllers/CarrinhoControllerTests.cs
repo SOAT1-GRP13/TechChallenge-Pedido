@@ -299,7 +299,7 @@ namespace API.Tests.Controllers
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
-            pedidoQueriesMock.Setup(p => p.ObterCarrinhoCliente(It.IsAny<Guid>())).ReturnsAsync((CarrinhoDto)null);
+            pedidoQueriesMock.Setup(p => p.ObterCarrinhoCliente(It.IsAny<Guid>()));
 
             // Act
             var result = await controller.MeuCarrinho();

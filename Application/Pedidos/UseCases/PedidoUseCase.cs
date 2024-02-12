@@ -61,9 +61,14 @@ namespace Application.Pedidos.UseCases
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorClienteId(clienteId);
             if (pedido is null)
                 throw new DomainException("Pedido não encontrado!");
+
             var pedidoItem = await _pedidoRepository.ObterItemPorPedido(pedido.Id, produtoId);
+            if (pedidoItem is null)
+                throw new DomainException("Item do pedido não encontrado!");
+
             if (!pedido.PedidoItemExistente(pedidoItem))
                 throw new DomainException("Item do pedido não encontrado!");
+
             pedido.AtualizarUnidades(pedidoItem, quantidade);
             _pedidoRepository.AtualizarItem(pedidoItem);
             _pedidoRepository.Atualizar(pedido);

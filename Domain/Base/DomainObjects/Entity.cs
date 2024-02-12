@@ -31,7 +31,7 @@ namespace Domain.Base.DomainObjects
             _notificacoes?.Clear();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var compareTo = obj as Entity;
 

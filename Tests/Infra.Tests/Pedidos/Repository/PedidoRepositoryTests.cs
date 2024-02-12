@@ -27,7 +27,7 @@ namespace Infra.Tests.Pedidos.Repository
         {
             // Arrange
             var dbContext = CreateDbContext();
-            var repository = new PedidoRepository(dbContext, _mockOptions.Object);
+            var repository = new PedidoRepository(dbContext);
 
             var pedido = new Pedido(Guid.NewGuid(), 100);
             dbContext.Pedidos.Add(pedido);
@@ -38,7 +38,7 @@ namespace Infra.Tests.Pedidos.Repository
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(pedido.Id, result.Id);
+            Assert.Equal(pedido.Id, result?.Id);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Infra.Tests.Pedidos.Repository
         {
             // Arrange
             var dbContext = CreateDbContext();
-            var repository = new PedidoRepository(dbContext, _mockOptions.Object);
+            var repository = new PedidoRepository(dbContext);
 
             var idInexistente = Guid.NewGuid();
 
@@ -75,7 +75,7 @@ namespace Infra.Tests.Pedidos.Repository
             context.Pedidos.AddRange(pedidos);
             context.SaveChanges();
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
 
             // Ação
             var resultado = await repository.ObterListaPorClienteId(clienteId);
@@ -103,14 +103,14 @@ namespace Infra.Tests.Pedidos.Repository
 
             context.SaveChanges();
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
 
             // Ação
             var pedidoEncontrado = await repository.ObterPedidoRascunhoPorClienteId(clienteId);
 
             // Assertiva
             Assert.NotNull(pedidoEncontrado);
-            Assert.Equal(PedidoStatus.Rascunho, pedidoEncontrado.PedidoStatus);
+            Assert.Equal(PedidoStatus.Rascunho, pedidoEncontrado?.PedidoStatus);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Infra.Tests.Pedidos.Repository
 
             context.SaveChanges();
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
 
             // Ação
             var pedidoEncontrado = await repository.ObterPedidoRascunhoPorClienteId(clienteId);
@@ -144,7 +144,7 @@ namespace Infra.Tests.Pedidos.Repository
 
             var clienteId = Guid.NewGuid();
             var pedido = new Pedido(clienteId, 100);
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
 
             // Ação
             repository.Adicionar(pedido);
@@ -169,7 +169,7 @@ namespace Infra.Tests.Pedidos.Repository
             await context.SaveChangesAsync();
 
             // Atualizar o pedido
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             pedido.ColocarPedidoComoPago();
             repository.Atualizar(pedido);
             await context.SaveChangesAsync();
@@ -194,12 +194,12 @@ namespace Infra.Tests.Pedidos.Repository
             await context.SaveChangesAsync();
 
             // Obter o item por ID
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             var itemObtido = await repository.ObterItemPorId(pedidoItem.Id);
 
             // Assertiva
             Assert.NotNull(itemObtido);
-            Assert.Equal(pedidoItem.Id, itemObtido.Id);
+            Assert.Equal(pedidoItem.Id, itemObtido?.Id);
         }
         #endregion
 
@@ -216,7 +216,7 @@ namespace Infra.Tests.Pedidos.Repository
             var pedidoItem = new PedidoItem(Guid.NewGuid(), "Produto Teste", 2, 50);
             pedido.AdicionarItem(pedidoItem);
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             repository.AdicionarItem(pedidoItem);
             await context.SaveChangesAsync();
 
@@ -243,7 +243,7 @@ namespace Infra.Tests.Pedidos.Repository
             await context.SaveChangesAsync();
 
             pedido.ColocarPedidoComoPago();
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             repository.AtualizarItem(pedidoItem);
             await context.SaveChangesAsync();
 
@@ -268,7 +268,7 @@ namespace Infra.Tests.Pedidos.Repository
             context.Pedidos.Add(pedido);
             await context.SaveChangesAsync();
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             repository.RemoverItem(pedidoItem);
             await context.SaveChangesAsync();
 
@@ -290,7 +290,7 @@ namespace Infra.Tests.Pedidos.Repository
             context.Pedidos.Add(pedido2);
             await context.SaveChangesAsync();
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             var pedidos = await repository.ObterTodosPedidos();
 
             Assert.Contains(pedidos, p => p.Id == pedido1.Id);
@@ -317,7 +317,7 @@ namespace Infra.Tests.Pedidos.Repository
             context.Pedidos.AddRange(pedido1, pedido2, pedido3, pedido4, pedido5);
             await context.SaveChangesAsync();
 
-            var repository = new PedidoRepository(context, _mockOptions.Object);
+            var repository = new PedidoRepository(context);
             var pedidosParaFila = await repository.ObterPedidosParaFila();
 
             Assert.Contains(pedidosParaFila, p => p.Id == pedido1.Id);
@@ -338,7 +338,7 @@ namespace Infra.Tests.Pedidos.Repository
                 .Options;
 
             var mockContext = new Mock<PedidosContext>(options);
-            var repository = new PedidoRepository(mockContext.Object, _mockOptions.Object);
+            var repository = new PedidoRepository(mockContext.Object);
 
             // Act
             repository.Dispose();

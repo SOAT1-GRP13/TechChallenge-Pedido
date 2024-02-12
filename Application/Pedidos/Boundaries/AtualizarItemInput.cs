@@ -5,6 +5,11 @@ namespace Application.Pedidos.Boundaries
 {
     public class AtualizarItemInput
     {
+        public AtualizarItemInput()
+        {
+            Nome = string.Empty;
+        }
+
         [Required]
         [SwaggerSchema(
             Title = "Guid do produto",
