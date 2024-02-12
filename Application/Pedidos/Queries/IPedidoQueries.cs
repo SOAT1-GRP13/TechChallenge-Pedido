@@ -6,6 +6,6 @@ namespace Application.Pedidos.Queries
 {
     public interface IPedidoQueries
     {
-        Task<CarrinhoDto> ObterCarrinhoCliente(Guid clienteId);
+        Task<CarrinhoDto?> ObterCarrinhoCliente(Guid clienteId);
     }
 }

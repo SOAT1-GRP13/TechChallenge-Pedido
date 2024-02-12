@@ -167,9 +167,9 @@ namespace Domain.Tests.Pedidos
             // Assert
             var itemExistente = pedido.PedidoItems.FirstOrDefault(i => i.ProdutoId == produtoId);
             Assert.NotNull(itemExistente);
-            Assert.Equal(2, itemExistente.Quantidade);
-            Assert.Equal(200m, itemExistente.ValorUnitario);
-            Assert.Equal("Produto Teste Atualizado", itemExistente.ProdutoNome);
+            Assert.Equal(2, itemExistente?.Quantidade);
+            Assert.Equal(200m, itemExistente?.ValorUnitario);
+            Assert.Equal("Produto Teste Atualizado", itemExistente?.ProdutoNome);
         }
 
         [Fact]
@@ -201,7 +201,7 @@ namespace Domain.Tests.Pedidos
             // Assert
             var itemExistente = pedido.PedidoItems.FirstOrDefault(i => i.ProdutoId == produtoId);
             Assert.NotNull(itemExistente);
-            Assert.Equal(novaQuantidade, itemExistente.Quantidade);
+            Assert.Equal(novaQuantidade, itemExistente?.Quantidade);
         }
 
         [Fact]

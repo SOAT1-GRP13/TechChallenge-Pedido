@@ -36,7 +36,7 @@ namespace Application.Tests.Pedidos.UseCases
             int quantidade = 5;
             decimal valorUnitario = 100m;
 
-            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId));
 
             _unitOfWorkMock.Setup(u => u.Commit()).ReturnsAsync(true);
 
@@ -48,31 +48,6 @@ namespace Application.Tests.Pedidos.UseCases
             _pedidoRepositoryMock.Verify(r => r.Adicionar(It.IsAny<Pedido>()), Times.Once());
             _unitOfWorkMock.Verify(u => u.Commit(), Times.Once());
         }
-
-        /*[Fact]
-        public async Task AdicionarItem_DeveAdicionarItemAoPedidoExistente_QuandoPedidoExiste()
-        {
-            // Arrange
-            var clienteId = Guid.NewGuid();
-            var produtoId = Guid.NewGuid();
-            string nomeProduto = "Produto Teste";
-            int quantidade = 5;
-            decimal valorUnitario = 100m;
-            var pedidoExistente = new Pedido(clienteId, false, 0, 0);
-            pedidoExistente.TornarRascunho();
-
-            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId)).ReturnsAsync(pedidoExistente);
-
-            _unitOfWorkMock.Setup(u => u.Commit()).ReturnsAsync(true);
-
-            // Act
-            var resultado = await _pedidoUseCase.AdicionarItem(clienteId, produtoId, nomeProduto, quantidade, valorUnitario);
-
-            // Assert
-            Assert.True(resultado);
-            _pedidoRepositoryMock.Verify(r => r.Atualizar(It.IsAny<Pedido>()), Times.Once());
-            _unitOfWorkMock.Verify(u => u.Commit(), Times.Once());
-        }*/
         #endregion
 
         #region AtualizarItem
@@ -110,7 +85,7 @@ namespace Application.Tests.Pedidos.UseCases
             var produtoId = Guid.NewGuid();
             int novaQuantidade = 10;
 
-            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId));
 
             // Act & Assert
             await Assert.ThrowsAsync<DomainException>(() =>
@@ -150,7 +125,7 @@ namespace Application.Tests.Pedidos.UseCases
             var clienteId = Guid.NewGuid();
             var produtoId = Guid.NewGuid();
 
-            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPedidoRascunhoPorClienteId(clienteId));
 
             // Act & Assert
             await Assert.ThrowsAsync<DomainException>(() =>
@@ -186,7 +161,7 @@ namespace Application.Tests.Pedidos.UseCases
         {
             // Arrange
             var pedidoId = Guid.NewGuid();
-            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId));
 
             // Act
             var resultado = await _pedidoUseCase.TrocaStatusPedido(pedidoId, PedidoStatus.Pago);
@@ -216,7 +191,7 @@ namespace Application.Tests.Pedidos.UseCases
         {
             // Arrange
             var pedidoId = Guid.NewGuid();
-            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId));
 
             // Act & Assert
             await Assert.ThrowsAsync<DomainException>(() =>
@@ -250,7 +225,7 @@ namespace Application.Tests.Pedidos.UseCases
         {
             // Arrange
             var pedidoId = Guid.NewGuid();
-            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId));
 
             // Act & Assert
             await Assert.ThrowsAsync<DomainException>(() =>
@@ -259,32 +234,12 @@ namespace Application.Tests.Pedidos.UseCases
         #endregion
 
         #region CancelarProcessamento
-        /*[Fact]
-        public async Task CancelarProcessamento_DeveCancelarPedido_QuandoPedidoExiste()
-        {
-            // Arrange
-            var pedidoId = Guid.NewGuid();
-            var pedido = new Pedido(pedidoId, false, 0, 100);
-            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync(pedido);
-
-            _unitOfWorkMock.Setup(u => u.Commit()).ReturnsAsync(true);
-
-            // Act
-            var resultado = await _pedidoUseCase.CancelarProcessamento(pedidoId);
-
-            // Assert
-            Assert.True(resultado);
-            Assert.Equal(PedidoStatus.Rascunho, pedido.PedidoStatus);
-            _pedidoRepositoryMock.Verify(r => r.Atualizar(It.IsAny<Pedido>()), Times.Once());
-            _unitOfWorkMock.Verify(u => u.Commit(), Times.Once());
-        }*/
-
         [Fact]
         public async Task CancelarProcessamento_DeveLancarDomainException_QuandoPedidoNaoExiste()
         {
             // Arrange
             var pedidoId = Guid.NewGuid();
-            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId));
 
             // Act & Assert
             await Assert.ThrowsAsync<DomainException>(() =>
@@ -318,7 +273,7 @@ namespace Application.Tests.Pedidos.UseCases
         {
             // Arrange
             var pedidoId = Guid.NewGuid();
-            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync((Pedido)null);
+            _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId));
 
             // Act
             var resultado = await _pedidoUseCase.ObterPedidoPorId(pedidoId);

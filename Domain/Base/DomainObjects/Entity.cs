@@ -7,10 +7,12 @@ namespace Domain.Base.DomainObjects
         public Guid Id { get; set; }
 
         private List<Event> _notificacoes;
-        public IReadOnlyCollection<Event> Notificacoes => _notificacoes?.AsReadOnly();
+        public IReadOnlyCollection<Event> Notificacoes => _notificacoes.AsReadOnly();
+
         protected Entity()
         {
             Id = Guid.NewGuid();
+            _notificacoes = new List<Event>();
         }
 
         public void AdicionarEvento(Event evento)

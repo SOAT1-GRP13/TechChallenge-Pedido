@@ -14,10 +14,10 @@ namespace Application.Pedidos.Queries
             _pedidoRepository = pedidoRepository;
         }
 
-        public async Task<CarrinhoDto> ObterCarrinhoCliente(Guid clienteId)
+        public async Task<CarrinhoDto?> ObterCarrinhoCliente(Guid clienteId)
         {
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorClienteId(clienteId);
-            if (pedido == null) return null;
+            if (pedido is null) return null;
 
             var carrinho = new CarrinhoDto
             {

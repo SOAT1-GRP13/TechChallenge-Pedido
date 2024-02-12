@@ -251,7 +251,7 @@ namespace Infra.Tests.Pedidos.Repository
 
             Assert.NotNull(itemAtualizado);
             Assert.Equal(pedidoItem.Quantidade, itemAtualizado?.Quantidade);
-            Assert.Equal(pedido.PedidoStatus, itemAtualizado?.Pedido.PedidoStatus);
+            Assert.Equal(pedido.PedidoStatus, itemAtualizado?.Pedido?.PedidoStatus);
         }
         #endregion
 
