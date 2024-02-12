@@ -50,7 +50,7 @@ namespace API.Tests
             services.AddSingleton(rabbitMQServiceMock.Object);
             services.AddHostedService<PedidoPagoSubscriber>();
             services.AddHostedService<PedidoPreparandoSubscriber>();
-            services.AddHostedService<PedidoPrrontoSubscriber>();
+            services.AddHostedService<PedidoProntoSubscriber>();
 
             services.AddLogging();
 

@@ -13,13 +13,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infra.RabbitMQ.Consumers
 {
-    public class PedidoPrrontoSubscriber : BackgroundService
+    public class PedidoProntoSubscriber : BackgroundService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly string _nomeDaFila;
         private IModel _channel;
 
-        public PedidoPrrontoSubscriber(
+        public PedidoProntoSubscriber(
             IServiceScopeFactory scopeFactory,
             RabbitMQOptions options,
             IModel model)
@@ -39,28 +39,35 @@ namespace Infra.RabbitMQ.Consumers
         {
             var consumer = new EventingBasicConsumer(_channel);
 
-            consumer.Received += (ModuleHandle, ea) =>
-            {
-                using (var scope = _scopeFactory.CreateScope())
-                {
-                    var mediatorHandler = scope.ServiceProvider.GetRequiredService<IMediatorHandler>();
-
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    var pedidoPago = JsonSerializer.Deserialize<CarrinhoDto>(message);
-
-                    if (pedidoPago is null)
-                        return;
-
-                    var input = new AtualizarStatusPedidoInput(pedidoPago.PedidoId, (int)PedidoStatus.Pronto);
-                    var command = new AtualizarStatusPedidoCommand(input);
-                    mediatorHandler.EnviarComando<AtualizarStatusPedidoCommand, bool>(command).Wait();
-                }
-            };
+            consumer.Received += (ModuleHandle, ea) => { InvokeReceivedEvent(ModuleHandle, ea); };
 
             _channel.BasicConsume(queue: _nomeDaFila, autoAck: true, consumer: consumer);
 
             return Task.CompletedTask;
+        }
+
+        protected void InvokeReceivedEvent(object? model, BasicDeliverEventArgs ea)
+        {
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var mediatorHandler = scope.ServiceProvider.GetRequiredService<IMediatorHandler>();
+
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                CarrinhoDto pedidoPronto;
+                try
+                {
+                    pedidoPronto = JsonSerializer.Deserialize<CarrinhoDto>(message) ?? new CarrinhoDto();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro deserializar carrinhoDto", ex);
+                }
+
+                var input = new AtualizarStatusPedidoInput(pedidoPronto.PedidoId, (int)PedidoStatus.Pronto);
+                var command = new AtualizarStatusPedidoCommand(input);
+                mediatorHandler.EnviarComando<AtualizarStatusPedidoCommand, bool>(command).Wait();
+            }
         }
 
         public override void Dispose()

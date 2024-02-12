@@ -55,17 +55,17 @@ namespace Infra.RabbitMQ.Consumers
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
 
-                CarrinhoDto pedidoPago;
+                CarrinhoDto pedidoPreparando;
                 try
                 {
-                    pedidoPago = JsonSerializer.Deserialize<CarrinhoDto>(message) ?? new CarrinhoDto();
+                    pedidoPreparando = JsonSerializer.Deserialize<CarrinhoDto>(message) ?? new CarrinhoDto();
                 }
                 catch (Exception ex)
                 {
                     throw new Exception("Erro deserializar carrinhoDto", ex);
                 }
 
-                var input = new AtualizarStatusPedidoInput(pedidoPago.PedidoId, (int)PedidoStatus.EmPreparacao);
+                var input = new AtualizarStatusPedidoInput(pedidoPreparando.PedidoId, (int)PedidoStatus.EmPreparacao);
                 var command = new AtualizarStatusPedidoCommand(input);
                 mediatorHandler.EnviarComando<AtualizarStatusPedidoCommand, bool>(command).Wait();
             }

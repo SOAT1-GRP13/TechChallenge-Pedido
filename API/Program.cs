@@ -73,7 +73,7 @@ builder.Services.AddSingleton(serviceProvider =>
 builder.Services.AddSingleton<IRabbitMQService, RabbitMQService>();
 builder.Services.AddHostedService<PedidoPagoSubscriber>();
 builder.Services.AddHostedService<PedidoPreparandoSubscriber>();
-builder.Services.AddHostedService<PedidoPrrontoSubscriber>();
+builder.Services.AddHostedService<PedidoProntoSubscriber>();
 
 builder.Services.RegisterServices();
 
