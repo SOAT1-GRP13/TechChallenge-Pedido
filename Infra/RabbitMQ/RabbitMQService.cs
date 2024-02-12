@@ -1,28 +1,17 @@
 ﻿using System.Text;
 using Domain.RabbitMQ;
+using Microsoft.AspNetCore.Connections;
 using RabbitMQ.Client;
 
 namespace Infra.RabbitMQ
 {
     public class RabbitMQService : IRabbitMQService
     {
-        private readonly RabbitMQOptions _options;
-        private IConnection _connection;
         private IModel _channel;
 
-        public RabbitMQService(RabbitMQOptions options)
+        public RabbitMQService(IModel model)
         {
-            _options = options;
-            var factory = new ConnectionFactory()
-            {
-                HostName = _options.Hostname,
-                Port = _options.Port,
-                UserName = _options.Username,
-                Password = _options.Password
-            };
-
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            _channel = model;
         }
 
         public void PublicaMensagem(string queueName, string message)

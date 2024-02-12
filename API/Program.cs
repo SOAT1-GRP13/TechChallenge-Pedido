@@ -2,6 +2,7 @@ using API.Setup;
 using Infra.Pedidos;
 using Infra.RabbitMQ;
 using Domain.RabbitMQ;
+using RabbitMQ.Client;
 using System.Reflection;
 using Domain.Configuration;
 using Infra.RabbitMQ.Consumers;
@@ -64,6 +65,12 @@ builder.Services.AddSwaggerGenConfig();
 builder.Services.AddAutoMapper(typeof(PedidosMappingProfile));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+builder.Services.AddSingleton<RabbitMQModelFactory>();
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var modelFactory = serviceProvider.GetRequiredService<RabbitMQModelFactory>();
+    return modelFactory.CreateModel();
+});
 builder.Services.AddSingleton<IRabbitMQService, RabbitMQService>();
 builder.Services.AddHostedService<PedidoPagoSubscriber>();
 builder.Services.AddHostedService<PedidoPreparandoSubscriber>();
