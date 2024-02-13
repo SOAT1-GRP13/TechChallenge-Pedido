@@ -140,6 +140,8 @@ namespace Application.Tests.Pedidos.UseCases
             // Arrange
             var pedidoId = Guid.NewGuid();
             var pedido = new Pedido(pedidoId, 100);
+            pedido.IniciarPedido();
+
             _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync(pedido);
 
             var pedidoDto = new PedidoDto();
@@ -206,6 +208,12 @@ namespace Application.Tests.Pedidos.UseCases
             // Arrange
             var pedidoId = Guid.NewGuid();
             var pedido = new Pedido(pedidoId, 100);
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+            pedido.ColocarPedidoEmPreparacao();
+            pedido.ColocarPedidoComoPronto();
+
             _pedidoRepositoryMock.Setup(r => r.ObterPorId(pedidoId)).ReturnsAsync(pedido);
 
             _unitOfWorkMock.Setup(u => u.Commit()).ReturnsAsync(true);

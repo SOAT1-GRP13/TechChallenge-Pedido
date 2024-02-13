@@ -94,8 +94,8 @@ namespace Infra.Tests.Pedidos.Repository
 
             var clienteId = Guid.NewGuid();
             var pedidoRascunho = new Pedido(clienteId, 100);
-            pedidoRascunho.TornarRascunho();
             var pedidoPago = new Pedido(clienteId, 200);
+            pedidoPago.IniciarPedido();
             pedidoPago.ColocarPedidoComoPago();
 
             context.Pedidos.Add(pedidoRascunho);
@@ -121,6 +121,7 @@ namespace Infra.Tests.Pedidos.Repository
             var clienteId = Guid.NewGuid();
 
             var pedido = new Pedido(clienteId, 100);
+            pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
             context.Pedidos.Add(pedido);
 
@@ -165,6 +166,8 @@ namespace Infra.Tests.Pedidos.Repository
 
             var clienteId = Guid.NewGuid();
             var pedido = new Pedido(clienteId, 100);
+            pedido.IniciarPedido();
+
             context.Pedidos.Add(pedido);
             await context.SaveChangesAsync();
 
@@ -235,7 +238,7 @@ namespace Infra.Tests.Pedidos.Repository
             var context = CreateDbContext();
 
             var pedido = new Pedido(Guid.NewGuid(), 100);
-            pedido.TornarRascunho();
+            pedido.IniciarPedido();
             var pedidoItem = new PedidoItem(Guid.NewGuid(), "Produto Teste", 2, 50);
             pedido.AdicionarItem(pedidoItem);
 
