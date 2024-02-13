@@ -95,41 +95,74 @@ namespace Domain.Pedidos
 
         public void TornarRascunho()
         {
+            if (PedidoStatus != PedidoStatus.Rascunho)
+                throw new DomainException("O pedido já está em um status diferente de rascunho");
+
             PedidoStatus = PedidoStatus.Rascunho;
         }
 
         public void IniciarPedido()
         {
+            if (PedidoStatus != PedidoStatus.Rascunho)
+                throw new DomainException("O pedido não pode ser iniciado, pois não está em rascunho");
+
             PedidoStatus = PedidoStatus.Iniciado;
         }
 
         public void ColocarPedidoComoPago()
         {
+            if (PedidoStatus != PedidoStatus.Iniciado)
+                throw new DomainException("Pedido não pode ser colocado como pago, pois o mesmo não está iniciado");
+
             PedidoStatus = PedidoStatus.Pago;
         }
 
         public void CancelarPedido()
         {
+            if (PedidoStatus == PedidoStatus.Cancelado)
+                throw new DomainException("Pedido já está cancelado");
+
+            if (PedidoStatus == PedidoStatus.EmPreparacao)
+                throw new DomainException("Pedido não pode ser cancelado, pois já foi para preparação");
+
+            if (PedidoStatus == PedidoStatus.Pronto)
+                throw new DomainException("Pedido não pode ser cancelado, pois já está pronto");
+
+            if (PedidoStatus == PedidoStatus.Finalizado)
+                throw new DomainException("Pedido já foi finalizado");
+
             PedidoStatus = PedidoStatus.Cancelado;
         }
 
         public void ColocarPedidoComoPronto()
         {
+            if (PedidoStatus != PedidoStatus.EmPreparacao)
+                throw new DomainException("Pedido não pode ser colocado como pronto, pois o mesmo não está em preparação");
+
             PedidoStatus = PedidoStatus.Pronto;
         }
 
         public void ColocarPedidoEmPreparacao()
         {
+            if (PedidoStatus != PedidoStatus.Recebido)
+                throw new DomainException("Pedido não pode ser colocado em preparação, pois o mesmo não foi recebido");
+
             PedidoStatus = PedidoStatus.EmPreparacao;
         }
 
         public void ColocarPedidoComoRecebido()
         {
+            if (PedidoStatus != PedidoStatus.Pago)
+                throw new DomainException("Pedido não pode ser colocado como recebido, pois o mesmo não foi pago");
+
             PedidoStatus = PedidoStatus.Recebido;
         }
 
         public void FinalizarPedido()
         {
+            if (PedidoStatus != PedidoStatus.Pronto)
+                throw new DomainException("Pedido não pode ser finalizado, pois não está pronto");
+
             PedidoStatus = PedidoStatus.Finalizado;
         }
 

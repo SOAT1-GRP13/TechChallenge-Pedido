@@ -10,6 +10,7 @@ namespace Domain.Tests.Pedidos
 {
     public class PedidoTests
     {
+        #region CalcularValorPedido
         [Fact]
         public void CalcularValorPedido_DeveCalcularValorCorreto_QuandoPedidoTemItens()
         {
@@ -41,7 +42,9 @@ namespace Domain.Tests.Pedidos
             // Assert
             Assert.Equal(valorTotalEsperado, pedido.ValorTotal);
         }
+        #endregion
 
+        #region PedidoItemExistente
         [Fact]
         public void PedidoItemExistente_DeveRetornarTrue_QuandoItemExiste()
         {
@@ -83,7 +86,9 @@ namespace Domain.Tests.Pedidos
             // Assert
             Assert.False(resultado);
         }
+        #endregion
 
+        #region AdicionarItem
         [Fact]
         public void AdicionarItem_DeveAdicionarNovoItem_QuandoItemNaoExiste()
         {
@@ -120,7 +125,9 @@ namespace Domain.Tests.Pedidos
             Assert.Single(pedido.PedidoItems); // Ainda deve haver apenas um item, mas com quantidade atualizada
             Assert.Equal(3, pedido.PedidoItems.First(i => i.ProdutoId == produtoId).Quantidade); // Quantidade deve ser a soma das duas adições
         }
+        #endregion
 
+        #region RemoverItem
         [Fact]
         public void RemoverItem_DeveRemoverItem_QuandoItemExiste()
         {
@@ -149,7 +156,9 @@ namespace Domain.Tests.Pedidos
             var exception = Assert.Throws<DomainException>(() => pedido.RemoverItem(itemInexistente));
             Assert.Equal("O item não pertence ao pedido", exception.Message);
         }
+        #endregion
 
+        #region AtualizarItem
         [Fact]
         public void AtualizarItem_DeveAtualizarItem_QuandoItemExiste()
         {
@@ -183,7 +192,9 @@ namespace Domain.Tests.Pedidos
             var exception = Assert.Throws<DomainException>(() => pedido.AtualizarItem(itemInexistente));
             Assert.Equal("O item não pertence ao pedido", exception.Message);
         }
+        #endregion
 
+        #region AtualizarUnidades
         [Fact]
         public void AtualizarUnidades_DeveAtualizarQuantidade_QuandoItemExiste()
         {
@@ -215,16 +226,14 @@ namespace Domain.Tests.Pedidos
             var exception = Assert.Throws<DomainException>(() => pedido.AtualizarUnidades(itemInexistente, 5));
             Assert.Equal("O item não pertence ao pedido", exception.Message);
         }
+        #endregion
 
+        #region TornarRascunho
         [Fact]
         public void TornarRascunho_DeveDefinirStatusComoRascunho()
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
-
-            // Atualmente, o status do pedido deve ser Rascunho,
-            // mas vamos mudá-lo para simular uma mudança de estado.
-            pedido.IniciarPedido(); // Muda para um status diferente
 
             // Act
             pedido.TornarRascunho();
@@ -233,6 +242,30 @@ namespace Domain.Tests.Pedidos
             Assert.Equal(PedidoStatus.Rascunho, pedido.PedidoStatus);
         }
 
+        [Fact]
+        public void TornarRascunho_SeNaoEstiverEmRascunho_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+
+            // Act
+            try
+            {
+                pedido.TornarRascunho();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("O pedido já está em um status diferente de rascunho", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region IniciarPedido
         [Fact]
         public void IniciarPedido_DeveDefinirStatusComoIniciado()
         {
@@ -247,10 +280,36 @@ namespace Domain.Tests.Pedidos
         }
 
         [Fact]
+        public void IniciarPedido_SeNaoEstiverEmRascunho_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+
+            // Act
+            try
+            {
+                pedido.IniciarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("O pedido não pode ser iniciado, pois não está em rascunho", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region ColocarPedidoComoPago
+        [Fact]
         public void ColocarPedidoComoPago_DeveDefinirStatusComoPago()
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
 
             // Act
             pedido.ColocarPedidoComoPago();
@@ -259,6 +318,29 @@ namespace Domain.Tests.Pedidos
             Assert.Equal(PedidoStatus.Pago, pedido.PedidoStatus);
         }
 
+        [Fact]
+        public void ColocarPedidoComoPago_SeNaoEstiverIniciado_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+
+            // Act
+            try
+            {
+                pedido.ColocarPedidoComoPago();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser colocado como pago, pois o mesmo não está iniciado", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region CancelarPedido
         [Fact]
         public void CancelarPedido_DeveDefinirStatusComoCancelado()
         {
@@ -273,10 +355,116 @@ namespace Domain.Tests.Pedidos
         }
 
         [Fact]
+        public void CancelarPedido_SeJaEstiverCancelado_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.CancelarPedido();
+
+            // Act
+            try
+            {
+                pedido.CancelarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido já está cancelado", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+
+        [Fact]
+        public void CancelarPedido_SeJaEstiverPronto_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+            pedido.ColocarPedidoEmPreparacao();
+            pedido.ColocarPedidoComoPronto();
+
+            // Act
+            try
+            {
+                pedido.CancelarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser cancelado, pois já está pronto", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+
+        [Fact]
+        public void CancelarPedido_SeJaEstiverEmPreparacao_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+            pedido.ColocarPedidoEmPreparacao();
+
+            // Act
+            try
+            {
+                pedido.CancelarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser cancelado, pois já foi para preparação", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+
+        [Fact]
+        public void CancelarPedido_SeJaEstiverFinalizado_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+            pedido.ColocarPedidoEmPreparacao();
+            pedido.ColocarPedidoComoPronto();
+            pedido.FinalizarPedido();
+
+            // Act
+            try
+            {
+                pedido.CancelarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido já foi finalizado", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region ColocarPedidoComoPronto
+        [Fact]
         public void ColocarPedidoComoPronto_DeveDefinirStatusComoPronto()
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+            pedido.ColocarPedidoEmPreparacao();
 
             // Act
             pedido.ColocarPedidoComoPronto();
@@ -286,10 +474,39 @@ namespace Domain.Tests.Pedidos
         }
 
         [Fact]
-        public void ColocarPedidoEmPreparacao_DeveDefinirStatusComoPago()
+        public void ColocarPedidoComoPronto_SeNaoEstiverEmPreparacao_DeveLancarExcecao()
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+
+            // Act
+            try
+            {
+                pedido.ColocarPedidoComoPronto();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser colocado como pronto, pois o mesmo não está em preparação", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region ColocarPedidoEmPreparacao
+        [Fact]
+        public void ColocarPedidoEmPreparacao_DeveDefinirStatusComoEmPreparacao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
 
             // Act
             pedido.ColocarPedidoEmPreparacao();
@@ -299,10 +516,35 @@ namespace Domain.Tests.Pedidos
         }
 
         [Fact]
-        public void ColocarPedidoComoRecebido_DeveDefinirStatusComoPago()
+        public void ColocarPedidoEmPreparacao_SeNaoEstiverRecebido_DeveLancarExcecao()
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+
+            // Act
+            try
+            {
+                pedido.ColocarPedidoEmPreparacao();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser colocado em preparação, pois o mesmo não foi recebido", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region ColocarPedidoComoRecebido
+        [Fact]
+        public void ColocarPedidoComoRecebido_DeveDefinirStatusComoRecebido()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
 
             // Act
             pedido.ColocarPedidoComoRecebido();
@@ -312,10 +554,38 @@ namespace Domain.Tests.Pedidos
         }
 
         [Fact]
-        public void FinalizarPedido_DeveDefinirStatusComoPago()
+        public void ColocarPedidoComoRecebido_SeNaoEstiverPago_DeveLancarExcecao()
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+
+            // Act
+            try
+            {
+                pedido.ColocarPedidoComoRecebido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser colocado como recebido, pois o mesmo não foi pago", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
+        #region FinalizarPedido
+        [Fact]
+        public void FinalizarPedido_DeveDefinirStatusComoFinalizado()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.ColocarPedidoComoPago();
+            pedido.ColocarPedidoComoRecebido();
+            pedido.ColocarPedidoEmPreparacao();
+            pedido.ColocarPedidoComoPronto();
 
             // Act
             pedido.FinalizarPedido();
@@ -323,6 +593,28 @@ namespace Domain.Tests.Pedidos
             // Assert
             Assert.Equal(PedidoStatus.Finalizado, pedido.PedidoStatus);
         }
+
+        [Fact]
+        public void FinalizarPedido_SeNaoEstiverPronto_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+
+            // Act
+            try
+            {
+                pedido.FinalizarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser finalizado, pois não está pronto", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
 
         [Theory]
         [InlineData(PedidoStatus.Rascunho)]
@@ -337,6 +629,37 @@ namespace Domain.Tests.Pedidos
         {
             // Arrange
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+
+            switch (novoStatus)
+            {
+                case PedidoStatus.Pago:
+                    pedido.IniciarPedido();
+                    break;
+                case PedidoStatus.Recebido:
+                    pedido.IniciarPedido();
+                    pedido.ColocarPedidoComoPago();
+                    break;
+                case PedidoStatus.EmPreparacao:
+                    pedido.IniciarPedido();
+                    pedido.ColocarPedidoComoPago();
+                    pedido.ColocarPedidoComoRecebido();
+                    break;
+                case PedidoStatus.Pronto:
+                    pedido.IniciarPedido();
+                    pedido.ColocarPedidoComoPago();
+                    pedido.ColocarPedidoComoRecebido();
+                    pedido.ColocarPedidoEmPreparacao();
+                    break;                
+                case PedidoStatus.Finalizado:
+                    pedido.IniciarPedido();
+                    pedido.ColocarPedidoComoPago();
+                    pedido.ColocarPedidoComoRecebido();
+                    pedido.ColocarPedidoEmPreparacao();
+                    pedido.ColocarPedidoComoPronto();
+                    break;
+                default:
+                    break;
+            }
 
             // Act
             pedido.AtualizarStatus(novoStatus);
