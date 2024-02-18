@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Pedidos.Queries;
 using Application.Pedidos.Commands;
-using Application.Catalogo.Queries;
 using Application.Pedidos.Queries.DTO;
 using Application.Pedidos.Boundaries;
 using Microsoft.AspNetCore.Authorization;
@@ -17,16 +16,13 @@ namespace API.Controllers
     [SwaggerTag("Endpoints relacionados ao carrinho, sendo necessário se autenticar e o clienteId é pego de forma automatica")]
     public class CarrinhoController : ControllerBase
     {
-        private readonly IProdutosQueries _produtosQueries;
         private readonly IPedidoQueries _pedidoQueries;
         private readonly IMediatorHandler _mediatorHandler;
 
         public CarrinhoController(INotificationHandler<DomainNotification> notifications,
-                                  IProdutosQueries produtosQueries,
                                   IMediatorHandler mediatorHandler,
                                   IPedidoQueries pedidoQueries) : base(notifications, mediatorHandler)
         {
-            _produtosQueries = produtosQueries;
             _mediatorHandler = mediatorHandler;
             _pedidoQueries = pedidoQueries;
         }
@@ -45,12 +41,7 @@ namespace API.Controllers
         {
             try
             {
-                var produto = await _produtosQueries.ObterPorId(input.Id);
-                if (produto is null)
-                    return NotFound();
-
-
-                var command = new AdicionarItemPedidoCommand(ObterClienteId(), produto.Id, produto.Nome, input.Quantidade, produto.Valor);
+                var command = new AdicionarItemPedidoCommand(ObterClienteId(), input.Id, input.Nome, input.Quantidade, input.Valor);
                 await _mediatorHandler.EnviarComando<AdicionarItemPedidoCommand, bool>(command);
 
                 if (!OperacaoValida())
@@ -80,10 +71,6 @@ namespace API.Controllers
         {
             try
             {
-                var produto = await _produtosQueries.ObterPorId(input.Id);
-                if (produto is null)
-                    return NotFound();
-
                 var command = new AtualizarItemPedidoCommand(ObterClienteId(), input.Id, input.Quantidade);
                 await _mediatorHandler.EnviarComando<AtualizarItemPedidoCommand, bool>(command);
 
@@ -112,10 +99,6 @@ namespace API.Controllers
         {
             try
             {
-                var produto = await _produtosQueries.ObterPorId(id);
-                if (produto is null)
-                    return NotFound();
-
                 var command = new RemoverItemPedidoCommand(ObterClienteId(), id);
                 await _mediatorHandler.EnviarComando<RemoverItemPedidoCommand, bool>(command);
 
@@ -162,7 +145,7 @@ namespace API.Controllers
         [SwaggerOperation(
             Summary = "Confirma o pedido",
             Description = "Confirma o pedido e é nesta etapa que deve integrar com o mercado pago trazendo o QR Code.")]
-        [SwaggerResponse(200, "Retorna pedido confirmado", typeof(ConfirmarPedidoOutput))]
+        [SwaggerResponse(200, "Retorna pedido confirmado", typeof(CarrinhoDto))]
         [SwaggerResponse(404, "Caso não encontre nenhum carrinho")]
         [SwaggerResponse(400, "Caso não obedeça alguma regra de negocio")]
         [SwaggerResponse(500, "Caso algo inesperado aconteça")]
@@ -171,7 +154,7 @@ namespace API.Controllers
             //IniciarPedidoCommand Dispara todos os eventos de dominio para criar o pedido, realizar pagamento e finalizar pedido.
             var command = new IniciarPedidoCommand(input.PedidoId, ObterClienteId());
 
-            var pedido = await _mediatorHandler.EnviarComando<IniciarPedidoCommand, ConfirmarPedidoOutput>(command);
+            var pedido = await _mediatorHandler.EnviarComando<IniciarPedidoCommand, CarrinhoDto>(command);
 
             if (!OperacaoValida())
                 return StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());

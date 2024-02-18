@@ -1,23 +1,17 @@
 ﻿using Domain.Pedidos;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore;
 using Domain.Base.Data;
-using Domain.Base.Communication.Mediator;
-using Domain.Base.Messages;
-using Domain.Catalogo;
 using System.Reflection;
+using Domain.Base.Messages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infra.Pedidos
 {
     public class PedidosContext : DbContext, IUnitOfWork
     {
-        private readonly IMediatorHandler _mediatorHandler;
-
-
-        public PedidosContext(DbContextOptions<PedidosContext> options, IMediatorHandler mediatorHandler)
+        public PedidosContext(DbContextOptions<PedidosContext> options)
             : base(options)
         {
-            _mediatorHandler = mediatorHandler;
         }
 
         public DbSet<Pedido> Pedidos => Set<Pedido>();
@@ -41,7 +35,6 @@ namespace Infra.Pedidos
             }
 
             var sucesso = await base.SaveChangesAsync() > 0;
-            //if (sucesso) await _mediatorHandler.PublicarEventos(this); //Se houver sucesso, publica os eventos
 
             return sucesso;
         }

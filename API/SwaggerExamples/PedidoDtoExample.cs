@@ -1,9 +1,11 @@
 ﻿using Application.Pedidos.Queries.DTO;
 using Domain.Pedidos;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace API.SwaggerExamples
 {
+    [ExcludeFromCodeCoverage]
     public class PedidoDtoExample : IMultipleExamplesProvider<IEnumerable<PedidoDto>>
     {
         public IEnumerable<SwaggerExample<IEnumerable<PedidoDto>>> GetExamples()

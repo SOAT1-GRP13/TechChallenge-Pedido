@@ -13,7 +13,7 @@ namespace Application.Tests.Pedidos.Queries
             var clienteId = Guid.NewGuid();
             var produtoId = Guid.NewGuid();
             var pedidoItem = new PedidoItem(produtoId, "Produto Teste", 2, 50);
-            var pedido = new Pedido(clienteId, false, 0, 100);
+            var pedido = new Pedido(clienteId, 100);
             pedido.TornarRascunho();
             pedido.AdicionarItem(pedidoItem);
 
@@ -25,6 +25,12 @@ namespace Application.Tests.Pedidos.Queries
 
             // Act
             var carrinhoDto = await pedidoQueries.ObterCarrinhoCliente(clienteId);
+
+            if(carrinhoDto is null)
+            {
+                Assert.True(false, "Carrinho não pode ser nulo");
+                return;
+            }
 
             // Assert
             Assert.NotNull(carrinhoDto);
@@ -44,8 +50,7 @@ namespace Application.Tests.Pedidos.Queries
             var clienteId = Guid.NewGuid();
 
             var pedidoRepositoryMock = new Mock<IPedidoRepository>();
-            pedidoRepositoryMock.Setup(repo => repo.ObterPedidoRascunhoPorClienteId(clienteId))
-                                .ReturnsAsync((Pedido)null);
+            pedidoRepositoryMock.Setup(repo => repo.ObterPedidoRascunhoPorClienteId(clienteId));
 
             var pedidoQueries = new PedidoQueries(pedidoRepositoryMock.Object);
 

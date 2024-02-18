@@ -1,11 +1,15 @@
 ﻿using API.Setup;
 using System.Text;
+using Infra.Pedidos;
+using Infra.RabbitMQ;
+using Domain.RabbitMQ;
 using System.Reflection;
+using Infra.RabbitMQ.Consumers;
+using Microsoft.EntityFrameworkCore;
+using Application.Pedidos.AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Pedidos.AutoMapper;
-using Infra.Pedidos;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace API.Tests
 {
@@ -26,7 +30,27 @@ namespace API.Tests
             services.AddDbContext<PedidosContext>(options =>
                 options.UseNpgsql("User ID=fiap;Password=S3nh@L0c@lP3d1d0;Host=localhost;Port=15433;Database=techChallengeProduto;Pooling=true;"));
 
-            services.AddSingleton<IConfiguration>(configuration);
+            // Configuração manual de RabbitMQOptions
+            var rabbitMQOptions = new RabbitMQOptions
+            {
+                Hostname = "localhost",
+                Port = 5672,
+                Username = "guest",
+                Password = "guest",
+                QueuePedidoConfirmado = "pedido_confirmado",
+                QueuePedidoPago = "pedido_pago",
+                QueuePedidoPreparando = "pedido_preparando",
+                QueuePedidoPronto = "pedido_pronto"
+            };
+
+            // Registra RabbitMQOptions no contêiner de DI
+            services.AddSingleton(rabbitMQOptions);
+
+            var rabbitMQServiceMock = new Mock<IRabbitMQService>();
+            services.AddSingleton(rabbitMQServiceMock.Object);
+            services.AddHostedService<PedidoPagoSubscriber>();
+            services.AddHostedService<PedidoPreparandoSubscriber>();
+            services.AddHostedService<PedidoProntoSubscriber>();
 
             services.AddLogging();
 

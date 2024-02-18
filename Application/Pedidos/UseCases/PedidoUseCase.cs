@@ -2,8 +2,6 @@
 using Domain.Pedidos;
 using Domain.Base.DomainObjects;
 using Application.Pedidos.Queries.DTO;
-using Application.Pedidos.Boundaries;
-using Domain.Pagamento;
 
 namespace Application.Pedidos.UseCases
 {
@@ -11,19 +9,16 @@ namespace Application.Pedidos.UseCases
     {
         #region Propriedades
         private readonly IPedidoRepository _pedidoRepository;
-        private readonly IPagamentoRepository _pagamentoRepository;
         private readonly IMapper _mapper;
         #endregion
 
         #region Construtor
         public PedidoUseCase(
             IPedidoRepository pedidoRepository,
-            IMapper mapper,
-            IPagamentoRepository pagamentoRepository)
+            IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
             _mapper = mapper;
-            _pagamentoRepository = pagamentoRepository;
         }
         #endregion
 
@@ -48,7 +43,9 @@ namespace Application.Pedidos.UseCases
 
                 if (pedidoItemExistente)
                 {
-                    _pedidoRepository.AtualizarItem(pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId));
+                    var item = pedido.PedidoItems.FirstOrDefault(p => p.ProdutoId == pedidoItem.ProdutoId);
+                    if(item is not null)
+                        _pedidoRepository.AtualizarItem(item);
                 }
                 else
                 {
@@ -58,14 +55,20 @@ namespace Application.Pedidos.UseCases
 
             return await _pedidoRepository.UnitOfWork.Commit();
         }
+
         public async Task<bool> AtualizarItem(Guid clienteId, Guid produtoId, int quantidade)
         {
             var pedido = await _pedidoRepository.ObterPedidoRascunhoPorClienteId(clienteId);
             if (pedido is null)
                 throw new DomainException("Pedido não encontrado!");
+
             var pedidoItem = await _pedidoRepository.ObterItemPorPedido(pedido.Id, produtoId);
+            if (pedidoItem is null)
+                throw new DomainException("Item do pedido não encontrado!");
+
             if (!pedido.PedidoItemExistente(pedidoItem))
                 throw new DomainException("Item do pedido não encontrado!");
+
             pedido.AtualizarUnidades(pedidoItem, quantidade);
             _pedidoRepository.AtualizarItem(pedidoItem);
             _pedidoRepository.Atualizar(pedido);
@@ -117,24 +120,16 @@ namespace Application.Pedidos.UseCases
             return _mapper.Map<PedidoDto>(pedido);
         }
 
-        public async Task<ConfirmarPedidoOutput> IniciarPedido(Guid pedidoId)
+        public async Task<CarrinhoDto> IniciarPedido(Guid pedidoId)
         {
             var pedido = await _pedidoRepository.ObterPorId(pedidoId) ?? throw new DomainException("Pedido não encontrado!");
-
-
-            var qrData = await _pagamentoRepository.GeraPedidoQrCode(pedido);
-
-            if (string.IsNullOrEmpty(qrData))
-            {
-                throw new DomainException("Falha ao integrar com o MercadoPago");
-            }
 
             pedido.IniciarPedido();
 
             _pedidoRepository.Atualizar(pedido);
             await _pedidoRepository.UnitOfWork.Commit();
 
-            return new ConfirmarPedidoOutput(qrData, pedidoId);
+            return _mapper.Map<CarrinhoDto>(pedido);
         }
 
         public async Task<bool> FinalizarPedido(Guid pedidoId)

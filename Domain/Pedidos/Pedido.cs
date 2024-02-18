@@ -13,7 +13,7 @@ namespace Domain.Pedidos
         private readonly List<PedidoItem> _pedidoItems;
         public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
 
-        public Pedido(Guid clienteId, bool cupomUtilizado, decimal desconto, decimal valorTotal)
+        public Pedido(Guid clienteId, decimal valorTotal)
         {
             ClienteId = clienteId;
             ValorTotal = valorTotal;
@@ -64,7 +64,8 @@ namespace Domain.Pedidos
 
             var itemExistente = PedidoItems.FirstOrDefault(p => p.ProdutoId == item.ProdutoId);
 
-            if (itemExistente == null) throw new DomainException("O item não pertence ao pedido");
+            if (itemExistente is null) throw new DomainException("O item não pertence ao pedido");
+
             _pedidoItems.Remove(itemExistente);
 
             CalcularValorPedido();
@@ -77,7 +78,8 @@ namespace Domain.Pedidos
 
             var itemExistente = PedidoItems.FirstOrDefault(p => p.ProdutoId == item.ProdutoId);
 
-            if (itemExistente == null) throw new DomainException("O item não pertence ao pedido");
+            if (itemExistente is null) 
+                throw new DomainException("O item não pertence ao pedido");
 
             _pedidoItems.Remove(itemExistente);
             _pedidoItems.Add(item);
@@ -93,41 +95,74 @@ namespace Domain.Pedidos
 
         public void TornarRascunho()
         {
+            if (PedidoStatus != PedidoStatus.Rascunho)
+                throw new DomainException("O pedido já está em um status diferente de rascunho");
+
             PedidoStatus = PedidoStatus.Rascunho;
         }
 
         public void IniciarPedido()
         {
+            if (PedidoStatus != PedidoStatus.Rascunho)
+                throw new DomainException("O pedido não pode ser iniciado, pois não está em rascunho");
+
             PedidoStatus = PedidoStatus.Iniciado;
         }
 
         public void ColocarPedidoComoPago()
         {
+            if (PedidoStatus != PedidoStatus.Iniciado)
+                throw new DomainException("Pedido não pode ser colocado como pago, pois o mesmo não está iniciado");
+
             PedidoStatus = PedidoStatus.Pago;
         }
 
         public void CancelarPedido()
         {
+            if (PedidoStatus == PedidoStatus.Cancelado)
+                throw new DomainException("Pedido já está cancelado");
+
+            if (PedidoStatus == PedidoStatus.EmPreparacao)
+                throw new DomainException("Pedido não pode ser cancelado, pois já foi para preparação");
+
+            if (PedidoStatus == PedidoStatus.Pronto)
+                throw new DomainException("Pedido não pode ser cancelado, pois já está pronto");
+
+            if (PedidoStatus == PedidoStatus.Finalizado)
+                throw new DomainException("Pedido já foi finalizado");
+
             PedidoStatus = PedidoStatus.Cancelado;
         }
 
         public void ColocarPedidoComoPronto()
         {
+            if (PedidoStatus != PedidoStatus.EmPreparacao)
+                throw new DomainException("Pedido não pode ser colocado como pronto, pois o mesmo não está em preparação");
+
             PedidoStatus = PedidoStatus.Pronto;
         }
 
         public void ColocarPedidoEmPreparacao()
         {
+            if (PedidoStatus != PedidoStatus.Recebido)
+                throw new DomainException("Pedido não pode ser colocado em preparação, pois o mesmo não foi recebido");
+
             PedidoStatus = PedidoStatus.EmPreparacao;
         }
 
         public void ColocarPedidoComoRecebido()
         {
+            if (PedidoStatus != PedidoStatus.Pago)
+                throw new DomainException("Pedido não pode ser colocado como recebido, pois o mesmo não foi pago");
+
             PedidoStatus = PedidoStatus.Recebido;
         }
 
         public void FinalizarPedido()
         {
+            if (PedidoStatus != PedidoStatus.Pronto)
+                throw new DomainException("Pedido não pode ser finalizado, pois não está pronto");
+
             PedidoStatus = PedidoStatus.Finalizado;
         }
 
@@ -170,7 +205,7 @@ namespace Domain.Pedidos
             {
                 var pedido = new Pedido
                 {
-                    ClienteId = clienteId, // TODO - Caso o cliente não se identifique usar algum código de cliente anônimo.
+                    ClienteId = clienteId,
                 };
 
                 pedido.TornarRascunho();

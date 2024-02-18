@@ -1,11 +1,10 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using Domain.Base.Messages;
-using Application.Pedidos.Boundaries;
+using Application.Pedidos.Queries.DTO;
 
 namespace Application.Pedidos.Commands
 {
-    public class IniciarPedidoCommand : Command<ConfirmarPedidoOutput>
+    public class IniciarPedidoCommand : Command<CarrinhoDto>
     {
         public Guid PedidoId { get; private set; }
         public Guid ClienteId { get; private set; }

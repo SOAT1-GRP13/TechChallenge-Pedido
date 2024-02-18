@@ -1,8 +1,10 @@
 ﻿using Application.Pedidos.Queries.DTO;
 using Swashbuckle.AspNetCore.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace API.SwaggerExamples
 {
+    [ExcludeFromCodeCoverage]
     public class CarrinhoDtoExample : IExamplesProvider<CarrinhoDto>
     {
         public CarrinhoDto GetExamples()

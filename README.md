@@ -17,6 +17,11 @@ Sinta-se à vontade para entrar em contato conosco se tiver alguma dúvida ou su
 
 License: [MIT](License.txt)
 
+# Sonar Cloud
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=coverage)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=bugs)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=SOAT1-GRP13_TechChallenge-Pedido&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=SOAT1-GRP13_TechChallenge-Pedido)
+
+Para maiores detalhes através do link: https://sonarcloud.io/summary/overall?id=SOAT1-GRP13_TechChallenge-Pedido.
+
 # Bando de Dados
 
 Decidimos manter o PostgreSQL como o banco de dados para este microserviço. A escolha foi definida na experiência que o time possui com ele, o que facilita o trabalho. Além disso, fizemos uma limpeza no banco de dados, removendo tabelas desnecessárias e mantendo apenas as que são essenciais para este projeto. Assim, o banco está mais enxuto e alinhado com as nossas necessidades atuais.
