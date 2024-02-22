@@ -303,6 +303,43 @@ namespace Domain.Tests.Pedidos
         }
         #endregion
 
+        #region RecusarPedido
+        [Fact]
+        public void RecusarPedido_DeveDefinirStatusComoRecusado()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+
+            // Act
+            pedido.RecusarPedido();
+
+            // Assert
+            Assert.Equal(PedidoStatus.Recusado, pedido.PedidoStatus);
+        }
+
+        [Fact]
+        public void RecusarPedido_SeNaoEstiverIniciado_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+
+            // Act
+            try
+            {
+                pedido.RecusarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido não pode ser recusado, pois o mesmo não está iniciado", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+        #endregion
+
         #region ColocarPedidoComoPago
         [Fact]
         public void ColocarPedidoComoPago_DeveDefinirStatusComoPago()
@@ -448,6 +485,29 @@ namespace Domain.Tests.Pedidos
             {
                 // Assert
                 Assert.Equal("Pedido já foi finalizado", ex.Message);
+                return;
+            }
+
+            Assert.True(false, "Deveria ter lançado exceção");
+        }
+
+        [Fact]
+        public void CancelarPedido_SeJaEstiverRecusado_DeveLancarExcecao()
+        {
+            // Arrange
+            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
+            pedido.IniciarPedido();
+            pedido.RecusarPedido();
+
+            // Act
+            try
+            {
+                pedido.CancelarPedido();
+            }
+            catch (DomainException ex)
+            {
+                // Assert
+                Assert.Equal("Pedido já foi recusado", ex.Message);
                 return;
             }
 
@@ -625,6 +685,7 @@ namespace Domain.Tests.Pedidos
         [InlineData(PedidoStatus.EmPreparacao)]
         [InlineData(PedidoStatus.Recebido)]
         [InlineData(PedidoStatus.Finalizado)]
+        [InlineData(PedidoStatus.Recusado)]
         public void AtualizarStatus_DeveDefinirStatusCorreto(PedidoStatus novoStatus)
         {
             // Arrange
@@ -656,6 +717,9 @@ namespace Domain.Tests.Pedidos
                     pedido.ColocarPedidoComoRecebido();
                     pedido.ColocarPedidoEmPreparacao();
                     pedido.ColocarPedidoComoPronto();
+                    break;
+                case PedidoStatus.Recusado:
+                    pedido.IniciarPedido();
                     break;
                 default:
                     break;

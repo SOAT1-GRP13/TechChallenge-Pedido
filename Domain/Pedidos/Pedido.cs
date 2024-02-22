@@ -109,6 +109,14 @@ namespace Domain.Pedidos
             PedidoStatus = PedidoStatus.Iniciado;
         }
 
+        public void RecusarPedido()
+        {
+            if (PedidoStatus != PedidoStatus.Iniciado)
+                throw new DomainException("Pedido não pode ser recusado, pois o mesmo não está iniciado");
+
+            PedidoStatus = PedidoStatus.Recusado;
+        }
+
         public void ColocarPedidoComoPago()
         {
             if (PedidoStatus != PedidoStatus.Iniciado)
@@ -130,6 +138,9 @@ namespace Domain.Pedidos
 
             if (PedidoStatus == PedidoStatus.Finalizado)
                 throw new DomainException("Pedido já foi finalizado");
+
+            if (PedidoStatus == PedidoStatus.Recusado)
+                throw new DomainException("Pedido já foi recusado");
 
             PedidoStatus = PedidoStatus.Cancelado;
         }
@@ -193,6 +204,9 @@ namespace Domain.Pedidos
                     break;
                 case PedidoStatus.Finalizado:
                     FinalizarPedido();
+                    break;
+                case PedidoStatus.Recusado:
+                    RecusarPedido();
                     break;
                 default:
                     throw new DomainException("Status do pedido inválido");
