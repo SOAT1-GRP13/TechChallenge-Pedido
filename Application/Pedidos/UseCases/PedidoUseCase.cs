@@ -5,7 +5,7 @@ using Application.Pedidos.Queries.DTO;
 
 namespace Application.Pedidos.UseCases
 {
-    public class PedidoUseCase : IPedidoUseCase
+    public sealed class PedidoUseCase : IPedidoUseCase
     {
         #region Propriedades
         private readonly IPedidoRepository _pedidoRepository;

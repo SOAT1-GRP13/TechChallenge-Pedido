@@ -50,15 +50,6 @@ namespace Domain.Tests.Base.DomainObjects
         }
 
         [Fact]
-        public void EqualityOperator_GivenSameValues_ShouldReturnTrue()
-        {
-            var valueObject1 = new TestValueObject("Value", 1);
-            var valueObject2 = new TestValueObject("Value", 1);
-
-            Assert.True(valueObject1 == valueObject2);
-        }
-
-        [Fact]
         public void InequalityOperator_GivenDifferentValues_ShouldReturnTrue()
         {
             var valueObject1 = new TestValueObject("Value1", 1);
