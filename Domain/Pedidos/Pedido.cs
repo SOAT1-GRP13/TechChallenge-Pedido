@@ -34,7 +34,7 @@ namespace Domain.Pedidos
 
         public bool PedidoItemExistente(PedidoItem item)
         {
-            return _pedidoItems.Any(p => p.ProdutoId == item.ProdutoId);
+            return _pedidoItems.Exists(p => p.ProdutoId == item.ProdutoId);
         }
 
         public void AdicionarItem(PedidoItem item)
