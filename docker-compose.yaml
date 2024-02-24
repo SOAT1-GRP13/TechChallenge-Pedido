@@ -7,16 +7,18 @@ services:
         - BUILD_CONFIGURATION=Debug
       dockerfile: Dockerfile
     image: tech-challenge-soat1-grp13-pedido:latest
-    restart: on-failure
+    restart: on-failure    
     ports:
       - "5271:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionString=User ID=fiap;Password=SenhaLocalPedido;Host=postgres-db-pedido;Port=5432;Database=techChallengePedido;Pooling=true;
+      - RabbitMQ:Hostname=rabbitmq
     depends_on:
-      - postgres-db-pedido
+      postgres-db-pedido:
+        condition: service_healthy
 
-  postgres-db-pedido:  
+  postgres-db-pedido:
     hostname: postgres-compose
     image: postgres
     environment:
@@ -27,6 +29,12 @@ services:
       - "15437:5432"
     volumes:
       - tech-challenge-soat1-grp13-db-data-pedido:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
 
 volumes:
   tech-challenge-soat1-grp13-db-data-pedido:
