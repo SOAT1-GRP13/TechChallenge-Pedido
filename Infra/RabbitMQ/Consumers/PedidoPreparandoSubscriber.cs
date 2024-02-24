@@ -11,7 +11,7 @@ namespace Infra.RabbitMQ.Consumers
 {
     public class PedidoPreparandoSubscriber : RabbitMQSubscriber
     {
-        public PedidoPreparandoSubscriber(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(scopeFactory, options.QueuePedidoPreparando, model) { }
+        public PedidoPreparandoSubscriber(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(options.ExchangePedidoPreparando, options.QueuePedidoPreparando, scopeFactory, model) { }
 
         protected override void InvokeCommand(CarrinhoDto carrinhoDto, IMediatorHandler mediatorHandler)
         {

@@ -37,7 +37,6 @@ namespace API.Tests
                 Port = 5672,
                 Username = "guest",
                 Password = "guest",
-                QueuePedidoConfirmado = "pedido_confirmado",
                 QueuePedidoPago = "pedido_pago",
                 QueuePedidoPreparando = "pedido_preparando",
                 QueuePedidoPronto = "pedido_pronto"

@@ -10,7 +10,7 @@ namespace Infra.RabbitMQ.Consumers
 {
     public class PedidoFinalizadoSubscriber : RabbitMQSubscriber
     {
-        public PedidoFinalizadoSubscriber(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(scopeFactory, options.QueuePedidoFinalizado, model) { }
+        public PedidoFinalizadoSubscriber(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(options.ExchangePedidoFinalizado, options.QueuePedidoFinalizado, scopeFactory, model) { }
 
         protected override void InvokeCommand(CarrinhoDto carrinhoDto, IMediatorHandler mediatorHandler)
         {
