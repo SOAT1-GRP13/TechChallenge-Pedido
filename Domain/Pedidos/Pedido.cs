@@ -155,18 +155,10 @@ namespace Domain.Pedidos
 
         public void ColocarPedidoEmPreparacao()
         {
-            if (PedidoStatus != PedidoStatus.Recebido)
-                throw new DomainException("Pedido não pode ser colocado em preparação, pois o mesmo não foi recebido");
+            if (PedidoStatus != PedidoStatus.Pago)
+                throw new DomainException("Pedido não pode ser colocado em preparação, pois o mesmo não foi pago");
 
             PedidoStatus = PedidoStatus.EmPreparacao;
-        }
-
-        public void ColocarPedidoComoRecebido()
-        {
-            if (PedidoStatus != PedidoStatus.Pago)
-                throw new DomainException("Pedido não pode ser colocado como recebido, pois o mesmo não foi pago");
-
-            PedidoStatus = PedidoStatus.Recebido;
         }
 
         public void FinalizarPedido()
@@ -198,9 +190,6 @@ namespace Domain.Pedidos
                     break;
                 case PedidoStatus.EmPreparacao:
                     ColocarPedidoEmPreparacao();
-                    break;
-                case PedidoStatus.Recebido:
-                    ColocarPedidoComoRecebido();
                     break;
                 case PedidoStatus.Finalizado:
                     FinalizarPedido();

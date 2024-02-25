@@ -161,5 +161,24 @@ namespace API.Controllers
 
             return Ok(pedido);
         }
+
+        [HttpGet("consultar-status-pedido/{pedidoId}")]
+        [Authorize]
+        [SwaggerOperation(
+            Summary = "Consultar status do pedido",
+            Description = "Consulta status do pedido a partir do Guid")]
+        [SwaggerResponse(200, "Retorna o pedido atualizado", typeof(ConsultarStatusPedidoOutput))]
+        [SwaggerResponse(404, "Caso não encontre o pedido com o Id informado")]
+        [SwaggerResponse(500, "Caso algo inesperado aconteça")]
+        public async Task<IActionResult> ConsultarStatusPedido([FromRoute] Guid pedidoId)
+        {
+            var command = new ConsultarStatusPedidoCommand(pedidoId);
+            var pedido = await _mediatorHandler.EnviarComando<ConsultarStatusPedidoCommand, ConsultarStatusPedidoOutput>(command);
+
+            if (!OperacaoValida())
+                return StatusCode(StatusCodes.Status400BadRequest, ObterMensagensErro());
+
+            return Ok(pedido);
+        }
     }
 }

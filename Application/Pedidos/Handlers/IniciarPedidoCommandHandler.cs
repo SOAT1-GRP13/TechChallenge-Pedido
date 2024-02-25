@@ -46,7 +46,7 @@ namespace Application.Pedidos.Handlers
                 var carrinho = await _pedidoUseCase.IniciarPedido(message.PedidoId);
 
                 string mensagem = JsonSerializer.Serialize(carrinho);
-                var fila = _configuration.GetSection("RabbitMQ:QueuePedidoConfirmado").Value;
+                var fila = _configuration.GetSection("RabbitMQ:ExchangePedidoConfirmado").Value;
                 _rabbitMQService.PublicaMensagem(fila, mensagem);
 
                 return carrinho;

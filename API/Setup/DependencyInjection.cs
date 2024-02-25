@@ -12,6 +12,7 @@ using Application.Pedidos.UseCases;
 using Application.Pedidos.Queries.DTO;
 using Domain.Base.Communication.Mediator;
 using Domain.Base.Messages.CommonMessages.Notifications;
+using Application.Pedidos.Boundaries;
 
 namespace API.Setup
 {
@@ -36,6 +37,7 @@ namespace API.Setup
             services.AddScoped<IRequestHandler<AtualizarStatusPedidoCommand, bool>, AtualizarStatusPedidoCommandHandler>();
             services.AddScoped<IRequestHandler<RemoverItemPedidoCommand, bool>, RemoverItemPedidoCommandHandler>();
             services.AddScoped<IRequestHandler<IniciarPedidoCommand, CarrinhoDto>, IniciarPedidoCommandHandler>();
+            services.AddScoped<IRequestHandler<ConsultarStatusPedidoCommand, ConsultarStatusPedidoOutput>, ConsultarStatusPedidoCommandHandler>();
         }
     }
 }

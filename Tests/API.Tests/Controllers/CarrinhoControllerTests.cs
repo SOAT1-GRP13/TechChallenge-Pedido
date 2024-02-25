@@ -11,6 +11,7 @@ using Application.Pedidos.Queries.DTO;
 using Domain.Base.Communication.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Domain.Base.Messages.CommonMessages.Notifications;
+using Domain.Pedidos;
 
 namespace API.Tests.Controllers
 {
@@ -392,6 +393,65 @@ namespace API.Tests.Controllers
             var mensagensErro = Assert.IsType<List<string>>(badRequestObjectResult.Value);
             Assert.Contains("Id do pedido inválido", mensagensErro);
         }
+        #endregion
+
+        #region Testes metodo ConsultarStatusPedido
+        [Fact]
+        public async Task AoConsultarStatusPedido_DeveRetornarOk_QuandoSucesso()
+        {
+            // Arrange
+            var serviceProvider = new ServiceCollection()
+               .AddScoped<IMediatorHandler, MediatorHandler>()
+               .AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>()
+               .BuildServiceProvider();
+
+            var mediatorHandlerMock = new Mock<IMediatorHandler>();
+            var domainNotificationHandler = serviceProvider.GetRequiredService<INotificationHandler<DomainNotification>>();
+            var pedidoQueriesMock = new Mock<IPedidoQueries>();
+            var pedidoId = Guid.NewGuid();
+            var output = new ConsultarStatusPedidoOutput(PedidoStatus.Iniciado, pedidoId);
+
+            mediatorHandlerMock.Setup(m => m.EnviarComando<ConsultarStatusPedidoCommand, ConsultarStatusPedidoOutput>(It.IsAny<ConsultarStatusPedidoCommand>()))
+                .ReturnsAsync(output);
+
+            var controller = new CarrinhoController(domainNotificationHandler, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+
+            // Act
+            var result = await controller.ConsultarStatusPedido(pedidoId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<ConsultarStatusPedidoOutput>(okResult.Value);
+            Assert.Equal(output.PedidoId, returnValue.PedidoId);
+            Assert.Equal(output.Status, returnValue.Status);
+        }
+
+        [Fact]
+        public async Task AoConsultarStatusPedido_DeveRetornarBadRequest_QuandoFalha()
+        {
+            // Arrange
+            var mediatorHandlerMock = new Mock<IMediatorHandler>();
+            var notifications = new List<DomainNotification> { new DomainNotification("Error", "Erro de validação") };
+            var notificationContext = new DomainNotificationHandler();
+            var pedidoQueriesMock = new Mock<IPedidoQueries>();
+
+            foreach (var n in notifications)
+            {
+                await notificationContext.Handle(n, CancellationToken.None);
+            }
+
+            var controller = new CarrinhoController(notificationContext, mediatorHandlerMock.Object, pedidoQueriesMock.Object);
+
+            var pedidoId = Guid.NewGuid();
+
+            // Act
+            var result = await controller.ConsultarStatusPedido(pedidoId);
+
+            // Assert
+            var badRequestResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(400, badRequestResult.StatusCode);
+        }
+
         #endregion
 
         #region metodo privados
