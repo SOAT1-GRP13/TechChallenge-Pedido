@@ -210,7 +210,6 @@ namespace Application.Tests.Pedidos.UseCases
             var pedido = new Pedido(pedidoId, 100);
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
             pedido.ColocarPedidoEmPreparacao();
             pedido.ColocarPedidoComoPronto();
 

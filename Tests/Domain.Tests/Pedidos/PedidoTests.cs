@@ -420,7 +420,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
             pedido.ColocarPedidoEmPreparacao();
             pedido.ColocarPedidoComoPronto();
 
@@ -446,7 +445,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
             pedido.ColocarPedidoEmPreparacao();
 
             // Act
@@ -471,7 +469,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
             pedido.ColocarPedidoEmPreparacao();
             pedido.ColocarPedidoComoPronto();
             pedido.FinalizarPedido();
@@ -523,7 +520,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
             pedido.ColocarPedidoEmPreparacao();
 
             // Act
@@ -540,7 +536,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
 
             // Act
             try
@@ -566,7 +561,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
 
             // Act
             pedido.ColocarPedidoEmPreparacao();
@@ -589,45 +583,7 @@ namespace Domain.Tests.Pedidos
             catch (DomainException ex)
             {
                 // Assert
-                Assert.Equal("Pedido não pode ser colocado em preparação, pois o mesmo não foi recebido", ex.Message);
-                return;
-            }
-
-            Assert.True(false, "Deveria ter lançado exceção");
-        }
-        #endregion
-
-        #region ColocarPedidoComoRecebido
-        [Fact]
-        public void ColocarPedidoComoRecebido_DeveDefinirStatusComoRecebido()
-        {
-            // Arrange
-            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
-            pedido.IniciarPedido();
-            pedido.ColocarPedidoComoPago();
-
-            // Act
-            pedido.ColocarPedidoComoRecebido();
-
-            // Assert
-            Assert.Equal(PedidoStatus.Recebido, pedido.PedidoStatus);
-        }
-
-        [Fact]
-        public void ColocarPedidoComoRecebido_SeNaoEstiverPago_DeveLancarExcecao()
-        {
-            // Arrange
-            var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
-
-            // Act
-            try
-            {
-                pedido.ColocarPedidoComoRecebido();
-            }
-            catch (DomainException ex)
-            {
-                // Assert
-                Assert.Equal("Pedido não pode ser colocado como recebido, pois o mesmo não foi pago", ex.Message);
+                Assert.Equal("Pedido não pode ser colocado em preparação, pois o mesmo não foi pago", ex.Message);
                 return;
             }
 
@@ -643,7 +599,6 @@ namespace Domain.Tests.Pedidos
             var pedido = Pedido.PedidoFactory.NovoPedidoRascunho(Guid.NewGuid());
             pedido.IniciarPedido();
             pedido.ColocarPedidoComoPago();
-            pedido.ColocarPedidoComoRecebido();
             pedido.ColocarPedidoEmPreparacao();
             pedido.ColocarPedidoComoPronto();
 
@@ -683,7 +638,6 @@ namespace Domain.Tests.Pedidos
         [InlineData(PedidoStatus.Cancelado)]
         [InlineData(PedidoStatus.Pronto)]
         [InlineData(PedidoStatus.EmPreparacao)]
-        [InlineData(PedidoStatus.Recebido)]
         [InlineData(PedidoStatus.Finalizado)]
         [InlineData(PedidoStatus.Recusado)]
         public void AtualizarStatus_DeveDefinirStatusCorreto(PedidoStatus novoStatus)
@@ -696,25 +650,18 @@ namespace Domain.Tests.Pedidos
                 case PedidoStatus.Pago:
                     pedido.IniciarPedido();
                     break;
-                case PedidoStatus.Recebido:
-                    pedido.IniciarPedido();
-                    pedido.ColocarPedidoComoPago();
-                    break;
                 case PedidoStatus.EmPreparacao:
                     pedido.IniciarPedido();
                     pedido.ColocarPedidoComoPago();
-                    pedido.ColocarPedidoComoRecebido();
                     break;
                 case PedidoStatus.Pronto:
                     pedido.IniciarPedido();
                     pedido.ColocarPedidoComoPago();
-                    pedido.ColocarPedidoComoRecebido();
                     pedido.ColocarPedidoEmPreparacao();
                     break;                
                 case PedidoStatus.Finalizado:
                     pedido.IniciarPedido();
                     pedido.ColocarPedidoComoPago();
-                    pedido.ColocarPedidoComoRecebido();
                     pedido.ColocarPedidoEmPreparacao();
                     pedido.ColocarPedidoComoPronto();
                     break;
