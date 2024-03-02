@@ -8,6 +8,8 @@ using Application.Pedidos.Queries.DTO;
 using Domain.Base.Communication.Mediator;
 using Microsoft.Extensions.Configuration;
 using Domain.Base.Messages.CommonMessages.Notifications;
+using Microsoft.Extensions.Options;
+using Domain.Configuration;
 
 namespace Application.Pedidos.Handlers
 {
@@ -16,19 +18,20 @@ namespace Application.Pedidos.Handlers
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IPedidoUseCase _pedidoUseCase;
         private readonly IRabbitMQService _rabbitMQService;
-        private readonly IConfiguration _configuration;
+        private readonly Secrets _secrets;
 
 
         public IniciarPedidoCommandHandler(
             IMediatorHandler mediatorHandler,
             IPedidoUseCase pedidoUseCase,
             IRabbitMQService rabbitMQService,
-            IConfiguration configuration)
+            IOptions<Secrets> options
+            )
         {
             _mediatorHandler = mediatorHandler;
             _pedidoUseCase = pedidoUseCase;
             _rabbitMQService = rabbitMQService;
-            _configuration = configuration;
+            _secrets = options.Value;
         }
 
         public async Task<CarrinhoDto> Handle(IniciarPedidoCommand message, CancellationToken cancellationToken)
@@ -46,7 +49,7 @@ namespace Application.Pedidos.Handlers
                 var carrinho = await _pedidoUseCase.IniciarPedido(message.PedidoId);
 
                 string mensagem = JsonSerializer.Serialize(carrinho);
-                var fila = _configuration.GetSection("RabbitMQ:ExchangePedidoConfirmado").Value;
+                var fila = _secrets.ExchangePedidoConfirmado;
                 _rabbitMQService.PublicaMensagem(fila, mensagem);
 
                 return carrinho;

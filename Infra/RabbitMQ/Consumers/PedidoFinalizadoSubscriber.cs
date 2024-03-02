@@ -5,12 +5,14 @@ using Application.Pedidos.Boundaries;
 using Application.Pedidos.Queries.DTO;
 using Domain.Base.Communication.Mediator;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Domain.Configuration;
 
 namespace Infra.RabbitMQ.Consumers
 {
     public class PedidoFinalizadoSubscriber : RabbitMQSubscriber
     {
-        public PedidoFinalizadoSubscriber(IServiceScopeFactory scopeFactory, RabbitMQOptions options, IModel model) : base(options.ExchangePedidoFinalizado, options.QueuePedidoFinalizado, scopeFactory, model) { }
+        public PedidoFinalizadoSubscriber(IServiceScopeFactory scopeFactory, IOptions<Secrets> options, IModel model) : base(options.Value.ExchangePedidoFinalizado, options.Value.QueuePedidoFinalizado, scopeFactory, model) { }
 
         protected override void InvokeCommand(CarrinhoDto carrinhoDto, IMediatorHandler mediatorHandler)
         {
