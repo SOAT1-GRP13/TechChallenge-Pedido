@@ -13,7 +13,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionString=User ID=fiap;Password=SenhaLocalPedido;Host=postgres-db-pedido;Port=5432;Database=techChallengePedido;Pooling=true;
-      - RabbitMQ:Hostname=rabbitmq
+      - Rabbit_Hostname=rabbitmq
     depends_on:
       postgres-db-pedido:
         condition: service_healthy

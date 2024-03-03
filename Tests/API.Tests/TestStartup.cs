@@ -30,21 +30,6 @@ namespace API.Tests
             services.AddDbContext<PedidosContext>(options =>
                 options.UseNpgsql("User ID=fiap;Password=S3nh@L0c@lP3d1d0;Host=localhost;Port=15433;Database=techChallengeProduto;Pooling=true;"));
 
-            // Configuração manual de RabbitMQOptions
-            var rabbitMQOptions = new RabbitMQOptions
-            {
-                Hostname = "localhost",
-                Port = 5672,
-                Username = "guest",
-                Password = "guest",
-                QueuePedidoPago = "pedido_pago",
-                QueuePedidoPreparando = "pedido_preparando",
-                QueuePedidoPronto = "pedido_pronto"
-            };
-
-            // Registra RabbitMQOptions no contêiner de DI
-            services.AddSingleton(rabbitMQOptions);
-
             var rabbitMQServiceMock = new Mock<IRabbitMQService>();
             services.AddSingleton(rabbitMQServiceMock.Object);
             services.AddHostedService<PedidoPagoSubscriber>();
