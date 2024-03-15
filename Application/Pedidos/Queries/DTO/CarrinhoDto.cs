@@ -12,6 +12,7 @@ namespace Application.Pedidos.Queries.DTO
         public Guid ClienteId { get; set; }
         public decimal SubTotal { get; set; }
         public decimal ValorTotal { get; set; }
+        public string ClienteEmail { get; set; } = string.Empty;
 
 
         public List<CarrinhoItemDto> Items { get; set; } = new List<CarrinhoItemDto>();

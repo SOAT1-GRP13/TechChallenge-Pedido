@@ -47,6 +47,7 @@ namespace Application.Pedidos.Handlers
             try
             {
                 var carrinho = await _pedidoUseCase.IniciarPedido(message.PedidoId);
+                carrinho.ClienteEmail = message.ClienteEmail;
 
                 string mensagem = JsonSerializer.Serialize(carrinho);
                 var fila = _secrets.ExchangePedidoConfirmado;

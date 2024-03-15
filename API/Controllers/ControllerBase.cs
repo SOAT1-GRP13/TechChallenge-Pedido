@@ -42,5 +42,13 @@ namespace API.Controllers
 
             throw new DomainException("Cliente não identificado");
         }
+
+        protected string ObterClienteEmail()
+        {
+            if (!string.IsNullOrEmpty(User.FindFirstValue(ClaimTypes.Email)))
+                return User.FindFirstValue(ClaimTypes.Email);
+
+            return string.Empty;
+        }
     }
 }

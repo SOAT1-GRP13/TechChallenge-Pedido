@@ -152,7 +152,7 @@ namespace API.Controllers
         public async Task<IActionResult> ConfirmarPedido([FromBody] IniciarPedidoInput input)
         {
             //IniciarPedidoCommand Dispara todos os eventos de dominio para criar o pedido, realizar pagamento e finalizar pedido.
-            var command = new IniciarPedidoCommand(input.PedidoId, ObterClienteId());
+            var command = new IniciarPedidoCommand(input.PedidoId, ObterClienteId(), ObterClienteEmail());
 
             var pedido = await _mediatorHandler.EnviarComando<IniciarPedidoCommand, CarrinhoDto>(command);
 

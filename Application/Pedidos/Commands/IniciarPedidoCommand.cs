@@ -8,11 +8,13 @@ namespace Application.Pedidos.Commands
     {
         public Guid PedidoId { get; private set; }
         public Guid ClienteId { get; private set; }
+        public string ClienteEmail {get; private set;}
 
-        public IniciarPedidoCommand(Guid pedidoId, Guid clienteId)
+        public IniciarPedidoCommand(Guid pedidoId, Guid clienteId, string clienteEmail)
         {
             PedidoId = pedidoId;
             ClienteId = clienteId;
+            ClienteEmail = clienteEmail;
         }
 
         public override bool EhValido()

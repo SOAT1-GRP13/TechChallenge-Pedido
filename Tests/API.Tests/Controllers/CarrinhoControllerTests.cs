@@ -354,7 +354,7 @@ namespace API.Tests.Controllers
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
             var pedidoId = Guid.NewGuid();
-            var iniciarPedidoCommand = new IniciarPedidoCommand(pedidoId, Guid.NewGuid());
+            var iniciarPedidoCommand = new IniciarPedidoCommand(pedidoId, Guid.NewGuid(), string.Empty);
             var confirmarPedidoOutput = new CarrinhoDto();
 
             mediatorHandlerMock.Setup(m => m.EnviarComando<IniciarPedidoCommand, CarrinhoDto>(It.IsAny<IniciarPedidoCommand>()))
@@ -383,7 +383,7 @@ namespace API.Tests.Controllers
             var defaultHttpContext = new DefaultHttpContext { User = ClaimsPrincipal() };
             controller.ControllerContext = new ControllerContext { HttpContext = defaultHttpContext };
 
-            var iniciarPedidoCommand = new IniciarPedidoCommand(Guid.Empty, Guid.Empty);
+            var iniciarPedidoCommand = new IniciarPedidoCommand(Guid.Empty, Guid.Empty, string.Empty);
 
             // Act
             var result = await controller.ConfirmarPedido(new IniciarPedidoInput { PedidoId = iniciarPedidoCommand.PedidoId });
